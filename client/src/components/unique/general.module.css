@@ -1,0 +1,35 @@
+.flex {
+    background: rgb(48, 48, 48);
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+}
+
+.maxHeight {
+    height: 100vh;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+/* ======================== Padding ======================== */
+.topPaddingXL {
+    padding: 5em 0em 0em 0em;
+}
+
+/* ======================== Margin ======================== */
+.topMarginXL {
+    margin: 5em 0em 0em 0em;
+}

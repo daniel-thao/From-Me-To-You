@@ -1,0 +1,40 @@
+.clickToPost {
+  background: rgb(48, 48, 48);
+  border-radius: 2em;
+  border: none;
+  font-size: 1em;
+  padding: 1em;
+  width: 100%;
+}
+
+.clickToPost:hover {
+  background-color: rgb(70, 70, 70);
+  cursor: pointer;
+  outline: transparent;
+}
+
+.clickToPost:focus {
+  outline: transparent;
+}
+
+.clickToPost:active {
+  outline: transparent;
+}
+
+.postEmptyColor {
+  color: rgb(163, 163, 163);
+}
+
+.postNotEmptyColor {
+  color: aliceblue;
+}
+
+/* Second part of making a post */
+.createPostContainer {
+    height: 22em;
+    width: 25em;
+    padding: 1em;
+    border-radius: 1em;
+    background: lightcoral;
+    align-self: center;
+}
