@@ -3,13 +3,23 @@
     display: flex;
     width: 100%;
     flex-direction: row;
+}
+
+.flexRow {
     justify-content: space-around;
+}
+.flexCenter {
+    justify-content: center;
 }
 
 .flexColumn {
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
+    /* justify-content: space-around; */
+}
+
+.white {
+    color: aliceblue;
 }
 
 .maxHeight {
@@ -24,6 +34,14 @@
     display: block;
 }
 
+.textCenter {
+    text-align: center;
+}
+
+.dModeText {
+    color:rgb(150, 150, 150);
+}
+
 /* ======================== Padding ======================== */
 .topPaddingXL {
     padding: 5em 0em 0em 0em;
@@ -32,4 +50,21 @@
 /* ======================== Margin ======================== */
 .topMarginXL {
     margin: 5em 0em 0em 0em;
+}
+
+/* ======================== Position ======================== */
+.positionStatic {
+    position: static;
+}
+
+.positionRelative {
+    position: relative;
+}
+
+.positionStatic {
+    position: static;
+}
+
+.positionStatic {
+    position: static;
 }

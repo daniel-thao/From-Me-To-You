@@ -5,3 +5,10 @@
     align-items: center;
     height: 3em;
 }
+
+.icon {
+    color: aliceblue;
+    font-size: 2em;
+    vertical-align: middle;
+}
+

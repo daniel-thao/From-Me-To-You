@@ -1,4 +1,116 @@
+.enableSearch {
+  background: rgba(0, 0, 0, 0.5);
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* z-index: 10; */
+}
+
 .feed {
-    background: rgb(32, 32, 32);
-    /* flex-direction: column; */
+  background: rgb(32, 32, 32);
+  /* flex-direction: column; */
+}
+
+.feedColumn {
+  width: calc(100vw / 2);
+  min-width: 27em;
+  max-width: calc(50em);
+  /* background: lightblue; */
+}
+
+.clickToPost {
+  background: rgb(48, 48, 48);
+  border-radius: 2em;
+  border: none;
+  font-size: 1em;
+  padding: 1em;
+  /* width: 100%; */
+}
+
+.clickToPost:hover {
+  background-color: rgb(70, 70, 70);
+  cursor: pointer;
+  outline: transparent;
+}
+
+.clickToPost:focus {
+  outline: transparent;
+}
+
+.clickToPost:active {
+  outline: transparent;
+}
+
+.postEmptyColor {
+  color: rgb(163, 163, 163);
+}
+
+.postNotEmptyColor {
+  color: aliceblue;
+}
+
+/* Second part of making a post */
+.createPostContainer {
+  height: 22em;
+  width: 25em;
+  margin-top: 1em;
+  padding: 1em;
+  border-radius: 1em;
+  background: rgb(48, 48, 48);
+  align-self: center;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.exitMakePost {
+  font-size: 2em;
+  position: absolute;
+  top: 0em;
+  right: 0.5em;
+}
+
+.line {
+  border-style: groove;
+  border-color: rgb(182, 182, 182);
+  width: 100%;
+  /* height: 3em; */
+}
+
+.writingPost {
+    height: 70%;
+    width: 98.5%;
+    background: transparent;
+    color: aliceblue;
+    outline: none;
+    border: none;
+}
+
+.post {
+    background: lightcoral;
+    width: 100%;
+    border-radius: 1em;
+    color: aliceblue;
+}
+
+.post:hover {
+    cursor: pointer;
+}
+
+.post {
+    background: lightcoral;
+    width: 100%;
+    border-radius: 1em;
+    color: aliceblue;
+}
+
+.post {
+    background: lightcoral;
+    width: 100%;
+    border-radius: .5em;
+    color: aliceblue;
 }
