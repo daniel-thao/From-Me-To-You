@@ -18,11 +18,9 @@ import NavbarIconContext from "../../utils/NavbarIconContext";
 
 export default function Navbar() {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
-  useEffect(() => {
-    console.log(workSpaces);
-  });
+
   return (
-    <div className={`${gStyle.flex} ${gStyle.flexRow} ${CSS.navbar}`}>
+    <div className={`${gStyle.flex} ${gStyle.flexRow} ${CSS.navbar} ${workSpaces.search ? gStyle.zIndex: CSS.nothing}`}>
       <IconBtn className={CSS.icon}>
         <FontAwesomeIcon
           icon={faSearch}

@@ -12,6 +12,7 @@ import Navbar from "../components/unique/Navbar";
 import Feed from "../components/unique/Feed";
 import Chat from "../components/unique/Chat";
 import Setting from "../components/unique/Setting";
+import Search from "../components/unique/Search";
 
 export default function Homepage() {
   // These are for the createPost Context
@@ -32,9 +33,9 @@ export default function Homepage() {
       <NavbarIconContext.Provider value={navbarIconValue}>
       <div className={gStyle.positionStatic}>
         <div className={creatingPost ? CSS.enableCreatePost : CSS.nothing}></div>
-        <div className={workSpaces.search ? CSS.enableSearch : CSS.nothing}></div>
+        {/* <div className={workSpaces.search ? CSS.enableSearch : CSS.nothing}></div> */}
         <Navbar></Navbar>
-        <div>{workSpaces.search ? <Feed></Feed> : <></>}</div>
+        <div>{workSpaces.search ? <Search></Search> : <></>}</div>
         <div>{workSpaces.home ? <Feed></Feed> : <></>}</div>
         <div>{workSpaces.chat ? <Chat></Chat> : <></>}</div>
         <div>{workSpaces.settings ? <Setting></Setting> : <></>}</div>

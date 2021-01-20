@@ -13,22 +13,32 @@ export default function Chat() {
         <div className={`${gStyle.topMarginXL}`}>
           <div className={`${CSS.optionsContainer} ${gStyle.flexColumn}`}>
             <div
-              className={`${CSS.usernameChange}`}
+              className={`${CSS.optionsChange}`}
               onClick={() => {
                 console.log("username functionality");
               }}
             >
-              <h4 className={`${gStyle.white} ${gStyle.textCenter} ${CSS.usernameText}`}>
+              <h4 className={`${gStyle.white} ${gStyle.textCenter} ${CSS.optionsText}`}>
                 Username
               </h4>
             </div>
-            <div
-              className={`${CSS.pwChange}`}
+                        <div
+              className={`${CSS.optionsChange}`}
               onClick={() => {
                 console.log("username functionality");
               }}
             >
-              <h4 className={`${gStyle.white} ${gStyle.textCenter} ${CSS.pwText}`}>Password</h4>
+              <h4 className={`${gStyle.white} ${gStyle.textCenter} ${CSS.optionsText}`}>
+                Profile Pic Color
+              </h4>
+            </div>
+            <div
+              className={`${CSS.optionsChange}`}
+              onClick={() => {
+                console.log("username functionality");
+              }}
+            >
+              <h4 className={`${gStyle.white} ${gStyle.textCenter} ${CSS.optionsText}`}>Password</h4>
             </div>
           </div>
         </div>
