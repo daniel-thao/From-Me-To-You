@@ -22,6 +22,14 @@ router.post("/tag", async (req, res) => {
   res.json(newTag);
 });
 
+router.post("/friendReq", async (req, res) => {
+    const newTag = await db.UsersFriendReq.create({
+      myColumn: req.body.myColumn,
+    });
+  
+    res.json(newTag);
+  });
+
 // This is how to create something with the associations, but how to do it without creating it?
 router.post("/", async (req, res) => {
   const newActor = await db.ProductTest.create(
@@ -68,16 +76,21 @@ const getJoins = await db.ProductTagJoin.findAll({where : {ProductTestId: 1}});
 });
 
 
-// Testing Self Association Routes
-router.post("/selfAssociate", async (req, res) => {
-    const findUser = await db.UsersDup.findOne({ where: { id: 2 } });
-    const findOtherUser = await db.UsersDup.findOne({ where: { id: 4 } });
-    /* when you do the add() method, it also needs to include the name of the Table that you want to associate
-  So therefore, the outcome is addTagTest --> addNameOfDB. Also, you need to then pass the info you want to associate with each other
-  */
-    findUser.addUsersFriendReq(findOtherUser);
+// Testing Super Many-To-Many route that basically adds things to a model that
+router.post("/superManyToMany", async (req, res) => {
+    // Here I need to find the User and their Duplicate
+    const findUserDup = await db.UsersDup.findOne({ where: { id: 2 } });
+    const findUser = await db.Users.findOne({ where: { id: 3 } });
+
+    // Then I need to get the friend request
+    const FriendRequest = await db.UsersFriendReq.findOne({ where: { id: 1 } });
+
+    // Then add the request to each of the users
+    findUser.addUsersFriendReq(FriendRequest);
+    findUserDup.addUsersFriendReq(FriendRequest);
+
   
-    res.json(findOtherUser);
+    res.json(FriendRequest);
   });
 
 

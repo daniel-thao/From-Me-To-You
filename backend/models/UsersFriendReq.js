@@ -3,7 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const UsersFriendReq = sequelize.define(
     "UsersFriendReq",
     {
-      myColumn: DataTypes.BOOLEAN,
+      accepted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       freezeTableName: true,
@@ -11,8 +14,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   UsersFriendReq.associate = function (models) {
+    // Idk how to get rid of the id columns but just know that
+    // Original Users Table = Sender
     UsersFriendReq.belongsTo(models.Users);
+    // Duplicate Table = Receiver
     UsersFriendReq.belongsTo(models.UsersDup);
-    };
+  };
   return UsersFriendReq;
 };

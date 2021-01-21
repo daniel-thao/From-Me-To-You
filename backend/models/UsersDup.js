@@ -1,4 +1,6 @@
 // "use strict";
+const db = require("../models");
+
 module.exports = (sequelize, DataTypes) => {
   const UsersDup = sequelize.define(
     "UsersDup",
@@ -7,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       pw: DataTypes.STRING,
       recentSearches: DataTypes.STRING(1234),
       isOnline: DataTypes.BOOLEAN,
-      email: DataTypes.STRING, // I need to make this it's own seperate table so that I can simply go through the emails I have when new users want to create accounts and then I need to associate from here
     },
     {
       freezeTableName: true,
@@ -20,20 +21,12 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     UsersDup.hasMany(models.UsersFriendReq);
+
+    UsersDup.hasOne(models.Emails, {foreignKey: "email_id", as: "email_id"});
+
+    UsersDup.hasMany(models.Posts);
+
   };
-
-  //   UsersDup.associate = function (models) {
-  //     UsersDup.belongsToMany(models.Users, {
-  //       through: "UsersFriendReq",
-  //     });
-  //   };
-
-  // UsersDup.associate = function (models) {
-  //     UsersDup.hasOne(models.Emails, {
-  //       foreignKey: {
-  //         allowNull: false,
-  //       },
-  //     });
-  //   };
+  
   return UsersDup;
 };

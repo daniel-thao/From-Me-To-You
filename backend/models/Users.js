@@ -1,11 +1,10 @@
 // "use strict";
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes, models) => {
   const Users = sequelize.define(
     "Users",
     {
       username: DataTypes.STRING,
       pw: DataTypes.STRING,
-      email: DataTypes.STRING,
       recentSearches: DataTypes.STRING(1234),
       isOnline: DataTypes.BOOLEAN,
     },
@@ -20,13 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Users.hasMany(models.UsersFriendReq);
-  };
 
-  //   Users.associate = function (models) {
-  //     Users.belongsToMany(models.UsersDup, {
-  //       through: "UsersFriendReq",
-  //     });
-  //   };
+    Users.hasOne(models.Emails, { foreignKey: "email_id", as: "email_id" });
+
+    Users.hasMany(models.Posts);
+  };
 
   //   Users.associate = function (models) {
   //     Users.hasOne(models.Emails, {

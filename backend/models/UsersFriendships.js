@@ -3,7 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const UsersFriendships = sequelize.define(
     "UsersFriendships",
     {
-      myColumn: DataTypes.BOOLEAN,
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
     },
     {
       freezeTableName: true,
