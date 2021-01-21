@@ -1,6 +1,4 @@
 // "use strict";
-const db = require("../models");
-
 module.exports = (sequelize, DataTypes) => {
   const UsersDup = sequelize.define(
     "UsersDup",
@@ -17,16 +15,19 @@ module.exports = (sequelize, DataTypes) => {
 
   UsersDup.associate = function (models) {
     UsersDup.belongsToMany(models.Users, {
-      through: "UsersFriendships",
+      through: models.UsersFriendships,
     });
 
     UsersDup.hasMany(models.UsersFriendReq);
 
-    UsersDup.hasOne(models.Emails, {foreignKey: "email_id", as: "email_id"});
+    UsersDup.belongsTo(models.Emails, {
+      foreignKey: {
+        allowNull: false,
+      },
+    });
 
     UsersDup.hasMany(models.Posts);
-
   };
-  
+
   return UsersDup;
 };

@@ -15,12 +15,16 @@ module.exports = (sequelize, DataTypes, models) => {
 
   Users.associate = function (models) {
     Users.belongsToMany(models.UsersDup, {
-      through: "UsersFriendships",
+      through: models.UsersFriendships,
     });
 
     Users.hasMany(models.UsersFriendReq);
 
-    Users.hasOne(models.Emails, { foreignKey: "email_id", as: "email_id" });
+    Users.belongsTo(models.Emails, {
+      foreignKey: {
+        allowNull: false,
+      },
+    });
 
     Users.hasMany(models.Posts);
   };

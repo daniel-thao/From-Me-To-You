@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Emails.associate = function (models) {
-    Emails.belongsTo(models.Users);
-    Emails.belongsTo(models.UsersDup);
+    Emails.hasOne(models.Users);
+    Emails.hasOne(models.UsersDup);
   };
   return Emails;
 };
