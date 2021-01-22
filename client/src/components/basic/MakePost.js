@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import axios from "axios";
 
 // Import ModuleCSS
 import gStyle from "../../general.module.css";
@@ -11,14 +12,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // context
 import CreatePostContext from "../../utils/CreatePostContext";
 import EditPostContext from "../../utils/EditPostContext";
+import { AuthContext } from "../../routes/auth";
 
 export default function MakePost() {
   const { creatingPost, setCreatingPost } = useContext(CreatePostContext);
   const { post, setPost } = useContext(EditPostContext);
+  const { user } = useContext(AuthContext);
+
+  const submitPost = async function (token, postValue) {
+    await axios.post("/api/users/post", {
+      jwt: token,
+      content: postValue,
+    });
+
+    setPost({ ...post, isEmpty: false });
+    setCreatingPost({ makingPost: false, finished: true });
+  };
 
   return (
     <div
-      className={`${creatingPost === false ? gStyle.hide : gStyle.show} ${
+      className={`${creatingPost.makingPost === false ? gStyle.hide : gStyle.show} ${
         CSS.createPostContainer
       } `}
     >
@@ -31,9 +44,9 @@ export default function MakePost() {
             e.preventDefault();
             if (post.userInput !== "") {
               setPost({ ...post, isEmpty: false });
-              setCreatingPost(false);
+              setCreatingPost({ makingPost: false, finished: false });
             } else {
-              setCreatingPost(false);
+              setCreatingPost({ makingPost: false, finished: false });
             }
           }}
         ></FontAwesomeIcon>
@@ -56,8 +69,7 @@ export default function MakePost() {
           // HERE WE ARE GOING TO ADD SOME CODE TO ADD THE POST TO THE DATABASE AND THEN POST IT TO THE FRONTEND OF THE APP
           e.preventDefault();
           if (post.userInput !== "") {
-            setPost({ ...post, isEmpty: false });
-            setCreatingPost(false);
+            submitPost(user, post.userInput);
           } else {
             return;
           }

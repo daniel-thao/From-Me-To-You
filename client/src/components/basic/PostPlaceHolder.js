@@ -10,14 +10,13 @@ import EditPostContext from "../../utils/EditPostContext";
 
 export default function PostPlaceHolder() {
   const { creatingPost, setCreatingPost } = useContext(CreatePostContext);
-  const { post, setPost} = useContext(EditPostContext);
-
+  const { post, setPost } = useContext(EditPostContext);
 
   return (
     <div
       className={`${gStyle.topMarginXL} ${CSS.clickToPost} ${post.postColor}`}
       onClick={() => {
-        setCreatingPost(true);
+        setCreatingPost({ makingPost: true, finished: false });
         setPost({ ...post, isEmpty: true });
       }}
     >

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
 
 import gStyle from "../general.module.css";
 import CSS from "./homepage.module.css";
@@ -6,6 +7,7 @@ import CSS from "./homepage.module.css";
 // Import Context(s)
 import CreatePostContext from "../utils/CreatePostContext";
 import NavbarIconContext from "../utils/NavbarIconContext";
+import { AuthContext } from "../routes/auth";
 
 // import components
 import Navbar from "../components/unique/Navbar";
@@ -16,7 +18,7 @@ import Search from "../components/unique/Search";
 
 export default function Homepage() {
   // These are for the createPost Context
-  const [creatingPost, setCreatingPost] = useState(false);
+  const [creatingPost, setCreatingPost] = useState({ makingPost: false, finished: true });
   const postValue = { creatingPost, setCreatingPost };
 
   // These are for the NavbarIcons Context
@@ -26,23 +28,22 @@ export default function Homepage() {
     chat: false,
     settings: false,
   });
-  const navbarIconValue = {workSpaces, setWorkSpaces};
+  const navbarIconValue = { workSpaces, setWorkSpaces };
 
   return (
     <CreatePostContext.Provider value={postValue}>
       <NavbarIconContext.Provider value={navbarIconValue}>
-      <div className={gStyle.positionStatic}>
-        <div className={creatingPost ? CSS.enableCreatePost : CSS.nothing}></div>
-        {/* <div className={workSpaces.search ? CSS.enableSearch : CSS.nothing}></div> */}
-        <Navbar></Navbar>
-        <div>{workSpaces.search ? <Search></Search> : <></>}</div>
-        <div>{workSpaces.home ? <Feed></Feed> : <></>}</div>
-        <div>{workSpaces.chat ? <Chat></Chat> : <></>}</div>
-        <div>{workSpaces.settings ? <Setting></Setting> : <></>}</div>
+          <div className={gStyle.positionStatic}>
+            <div className={creatingPost.makingPost ? CSS.enableCreatePost : CSS.nothing}></div>
+            {/* <div className={workSpaces.search ? CSS.enableSearch : CSS.nothing}></div> */}
+            <Navbar></Navbar>
+            <div>{workSpaces.search ? <Search></Search> : <></>}</div>
+            <div>{workSpaces.home ? <Feed></Feed> : <></>}</div>
+            <div>{workSpaces.chat ? <Chat></Chat> : <></>}</div>
+            <div>{workSpaces.settings ? <Setting></Setting> : <></>}</div>
 
-
-        {/* <Feed></Feed> */}
-      </div>
+            {/* <Feed></Feed> */}
+          </div>
       </NavbarIconContext.Provider>
     </CreatePostContext.Provider>
   );

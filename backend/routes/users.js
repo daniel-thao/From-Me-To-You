@@ -22,7 +22,7 @@ const validateInfoChange = require("../validation/blacklist");
 function deCoding(token) {
   const id = jwtDecode(token);
   return id.id;
-};
+}
 
 /*
 ==========================================================================================
@@ -47,7 +47,9 @@ router.post("/register", async (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-console.log(`\n\n${req.body.username}\n${req.body.email}\n${req.body.password}\n${req.body.confirmPwd}\n\n`);
+  console.log(
+    `\n\n${req.body.username}\n${req.body.email}\n${req.body.password}\n${req.body.confirmPwd}\n\n`
+  );
 
   const dataArr = [];
   /*
@@ -127,6 +129,7 @@ router.post("/login", async (req, res) => {
           const payload = {
             id: userData.id,
             name: userData.username,
+            email: dataArr[0].email,
           };
 
           // Sign token
@@ -158,6 +161,48 @@ Mark User that is Online
 */
 router.put("/userOnline", async (req, res) => {
   // Here I'm going to use the JWT token that the registering process has in order to locate the user and then change the value of isOnline to true
+});
+
+/*
+==========================================================================================
+User Makes a Post
+==========================================================================================
+*/
+router.post("/post", async (req, res) => {
+  // I want to put the user being passed in here through the body
+  console.log(`\n\n${req.body.jwt.name}\n${req.body.jwt.id}\n${req.body.jwt.email}\n\n`);
+  console.log(`\n\n${req.body.content}\n\n`);
+
+  const dataArr = [];
+
+  // Since we have the id of the direct user in the JwtToken, we just need to create the post and pass the id for both columns of the UserId and the DupId
+
+  await db.Posts.create({
+    content: req.body.content,
+    UserId: req.body.jwt.id,
+    UsersDupId: req.body.jwt.id,
+  }).then((data) => {
+    dataArr.push(data);
+  });
+
+  res.json(dataArr);
+});
+
+/*
+==========================================================================================
+See the Post user just made
+==========================================================================================
+*/
+router.post("/genUserPost", async (req, res) => {
+  const dataArr = [];
+
+  // Since we have the id of the direct user in the JwtToken, we just need to create the post and pass the id for both columns of the UserId and the DupId
+
+  await db.Posts.findAll({ where: { UserId: req.body.jwt.id } }).then((data) => {
+    dataArr.push(data);
+  });
+
+  res.json(dataArr);
 });
 
 module.exports = router;

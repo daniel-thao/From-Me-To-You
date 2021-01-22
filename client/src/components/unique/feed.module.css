@@ -20,6 +20,11 @@
   /* background: lightblue; */
 }
 
+.feedPost {
+  background: lightseagreen;
+  margin: 1em;
+}
+
 .clickToPost {
   background: rgb(48, 48, 48);
   border-radius: 2em;
