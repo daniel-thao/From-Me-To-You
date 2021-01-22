@@ -194,15 +194,25 @@ See the Post user just made
 ==========================================================================================
 */
 router.post("/genUserPost", async (req, res) => {
-  const dataArr = [];
+  const getAllUserIds = [];
+  let postArr;
 
   // Since we have the id of the direct user in the JwtToken, we just need to create the post and pass the id for both columns of the UserId and the DupId
 
   await db.Posts.findAll({ where: { UserId: req.body.jwt.id } }).then((data) => {
-    dataArr.push(data);
+    getAllUserIds.push(data.map((index) => index.UserId));
+    postArr = data.map((index) => { return {timeStamp: index.createdAt, post: index.content}});
   });
 
-  res.json(dataArr);
+  for (let i = 0; i < getAllUserIds[0].length; i++) {
+    await db.Users.findOne({ where: { id: getAllUserIds[0][i] } }).then(async(data) => {
+      postArr[i].user = data.username;
+    });
+  }
+
+  // findUserArr.push(nameOfUsersArr);
+
+  res.json(postArr);
 });
 
 module.exports = router;

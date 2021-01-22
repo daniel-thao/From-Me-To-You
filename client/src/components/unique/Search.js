@@ -13,12 +13,12 @@ import NavbarIconContext from "../../utils/NavbarIconContext";
 
 // I need function that changes the icon of the search thing to an actual input bar
 
-export default function Search() {
+export default function Search({ className }) {
   const [userTyping, setUserTyping] = useState("");
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
 
   return (
-    <div className={`${CSS.searchWrapper}`}>
+    <div className={`${className} ${CSS.searchWrapper}`}>
       <div
         className={`${CSS.overlay} ${workSpaces.search ? CSS.enableSearch : CSS.nothing}`}
         onClick={() => {
@@ -42,8 +42,6 @@ export default function Search() {
           </div>
         </div>
       </div>
-
-      <Feed></Feed>
     </div>
   );
 }

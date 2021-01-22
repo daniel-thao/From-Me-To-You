@@ -8,11 +8,11 @@ import CSS from "./setting.module.css";
 import { AuthContext } from "../../routes/auth";
 // I need function that changes the icon of the search thing to an actual input bar
 
-export default function Chat() {
+export default function Setting({className}) {
   const { logoutUser } = useContext(AuthContext);
 
   return (
-    <div className={`${gStyle.flex} ${gStyle.flexRow} ${CSS.settingsContainer}`}>
+    <div className={`${className} ${gStyle.flex} ${gStyle.flexRow} ${CSS.settingsContainer}`}>
       <div className={`${gStyle.maxHeight}`}>
         <div className={`${gStyle.topMarginXL}`}>
           <div className={`${CSS.optionsContainer} ${gStyle.flexColumn}`}>

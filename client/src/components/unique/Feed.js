@@ -13,12 +13,18 @@ import PostPlaceHolder from "../basic/PostPlaceHolder";
 // Import Contexts
 import EditPostContext from "../../utils/EditPostContext";
 import CreatePostContext from "../../utils/CreatePostContext";
+import NavbarIconContext from "../../utils/NavbarIconContext";
+
 import { AuthContext } from "../../routes/auth";
+
+// Import FontAwesome
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // I need functions that set the feed with the posts from other users
 // Each of these posts will go into the container tag down below and I should honestly have a useEffect that updates whenever theuser has exhausted the set amount of posts that I've shown them kind of like youtube and such
 // This is going to require a mapping thing to the backend
-export default function Feed() {
+export default function Feed({ className }) {
   const [post, setPost] = useState({
     placeholder: "What's On your Mind???",
     userInput: "",
@@ -28,14 +34,17 @@ export default function Feed() {
 
   const editPostContextValues = { post, setPost };
   const { creatingPost, setCreatingPost } = useContext(CreatePostContext);
+  const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
+
   const { user } = useContext(AuthContext);
 
   // UseState for Feed Post
   const [postFeed, setPostFeed] = useState([]);
+  const [feedIsShowing, setFeedIsShowing] = useState(false);
 
   const compare = function (a, b) {
-    const bandA = a.createdAt;
-    const bandB = b.createdAt;
+    const bandA = a.timeStamp;
+    const bandB = b.timeStamp;
 
     let comparison = 0;
     if (bandA > bandB) {
@@ -48,31 +57,61 @@ export default function Feed() {
 
   // this is going to be used everytime a post has been created
   useEffect(async () => {
-    console.log(creatingPost);
-    if (creatingPost.finished === true) {
-      axios.post("/api/users/genUserPost", { jwt: user }).then(async (userPost) => {
-        console.log(userPost);
-        const arrBasedOnTimeCreated = userPost.data[0].sort(compare).reverse();
-        console.log(arrBasedOnTimeCreated);
-        setPostFeed(arrBasedOnTimeCreated);
-        console.log(postFeed);
-        setCreatingPost({ makingPost: false, finished: false });
-
-
-      });
+    if (feedIsShowing) {
+      setFeedIsShowing(false);
+    } else {
+      setFeedIsShowing(true);
     }
 
-  }, [creatingPost.finished]);
+    if (creatingPost.finished === true) {
+      await axios.post("/api/users/genUserPost", { jwt: user }).then(async (userPost) => {
+        const arrBasedOnTimeCreated = userPost.data.sort(compare).reverse();
+        setPostFeed(arrBasedOnTimeCreated);
+        setCreatingPost({ makingPost: false, finished: false });
+      });
+    }
+  }, [creatingPost.finished, workSpaces.home]);
 
   return (
     <EditPostContext.Provider value={editPostContextValues}>
-      <div className={`${gStyle.flex} ${gStyle.flexRow} ${CSS.feed} ${gStyle.maxHeight}`}>
+      <div
+        className={`${className} ${gStyle.flex} ${gStyle.flexRow} ${CSS.feed} ${gStyle.maxHeight} ${gStyle.scrollY}`}
+      >
         <div className={`${gStyle.flexColumn} ${gStyle.maxHeight}`}>
           <Container className={`${CSS.feedColumn}`}>
             <PostPlaceHolder></PostPlaceHolder>
-            {postFeed.map(function (index) {
-              <div className={`${CSS.feedPost}`}>{"hi"}</div>;
-            })}
+            {/* This basically shows the posts no matter what, but if it's not updated, SOo in this case the useEffect is fine?*/}
+            {feedIsShowing
+              ? postFeed.map((index) => (
+                  <div key={index.timeStamp} className={`${CSS.feedPost}`}>
+                    <div className={`${CSS.userData}`}>
+                      <FontAwesomeIcon
+                        className={`${CSS.userProfilePlaceholder}`}
+                        icon={faUserCircle}
+                      ></FontAwesomeIcon>
+                      <div className={`${CSS.userNameAndTime}`}>
+                        <h6 className={`${CSS.offWhite}`}>{index.user}</h6>
+                        <h6 className={`${CSS.offWhite}`}>{index.timeStamp}</h6>
+                      </div>
+                    </div>
+                    <h6 className={`${CSS.offWhite}`}>{index.post}</h6>
+                  </div>
+                ))
+              : postFeed.map((index) => (
+                  <div key={index.timeStamp} className={`${CSS.feedPost}`}>
+                    <div className={`${CSS.userData}`}>
+                      <FontAwesomeIcon
+                        className={`${CSS.userProfilePlaceholder}`}
+                        icon={faUserCircle}
+                      ></FontAwesomeIcon>
+                      <div className={`${CSS.userNameAndTime}`}>
+                        <h6 className={`${CSS.offWhite}`}>{index.user}</h6>
+                        <h6 className={`${CSS.offWhite}`}>{index.timeStamp}</h6>
+                      </div>
+                    </div>
+                    <h6 className={`${CSS.offWhite}`}>{index.post}</h6>
+                  </div>
+                ))}
           </Container>
         </div>
 

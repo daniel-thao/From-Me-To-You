@@ -6,10 +6,10 @@ import CSS from "./chat.module.css";
 
 // I need function that changes the icon of the search thing to an actual input bar
 
-export default function Chat() {
+export default function Chat({className}) {
   const [userTyping, setUserTyping] = useState("");
   return (
-    <div className={`${gStyle.flex} ${gStyle.flexRow} ${CSS.chatContainer} ${gStyle.maxHeight}`}>
+    <div className={`${className} ${gStyle.flex} ${gStyle.flexRow} ${CSS.chatContainer} ${gStyle.maxHeight}`}>
       <div
         className={`${gStyle.flex} ${gStyle.flexCenter} ${CSS.chatContainer} ${gStyle.topMarginXL}`}
       >

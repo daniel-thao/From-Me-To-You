@@ -37,10 +37,10 @@ export default function Homepage() {
             <div className={creatingPost.makingPost ? CSS.enableCreatePost : CSS.nothing}></div>
             {/* <div className={workSpaces.search ? CSS.enableSearch : CSS.nothing}></div> */}
             <Navbar></Navbar>
-            <div>{workSpaces.search ? <Search></Search> : <></>}</div>
-            <div>{workSpaces.home ? <Feed></Feed> : <></>}</div>
-            <div>{workSpaces.chat ? <Chat></Chat> : <></>}</div>
-            <div>{workSpaces.settings ? <Setting></Setting> : <></>}</div>
+            <div>{workSpaces.search ? <Search></Search> : <Search className={gStyle.hide}></Search>}</div>
+            <div>{workSpaces.home || workSpaces.search ? <Feed></Feed> : <Feed className={gStyle.hide}></Feed>}</div>
+            <div>{workSpaces.chat ? <Chat></Chat> : <Chat className={gStyle.hide}></Chat>}</div>
+            <div>{workSpaces.settings ? <Setting></Setting> : <Setting className={gStyle.hide}></Setting>}</div>
 
             {/* <Feed></Feed> */}
           </div>

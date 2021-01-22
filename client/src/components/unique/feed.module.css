@@ -21,8 +21,30 @@
 }
 
 .feedPost {
-  background: lightseagreen;
   margin: 1em;
+  padding: 1em;
+  border-radius: .3em;
+  background:rgb(48, 48, 48);
+}
+
+.userData {
+  display: flex;
+  margin: 0em 0em 1em 0em;
+}
+
+.userNameAndTime {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 0em 0em 0em .5em;
+}
+
+.userProfilePlaceholder {
+  font-size: 3em;
+}
+
+.offWhite {
+  color:rgb(221, 221, 221);
 }
 
 .clickToPost {
@@ -104,18 +126,4 @@
 
 .post:hover {
     cursor: pointer;
-}
-
-.post {
-    background: lightcoral;
-    width: 100%;
-    border-radius: 1em;
-    color: aliceblue;
-}
-
-.post {
-    background: lightcoral;
-    width: 100%;
-    border-radius: .5em;
-    color: aliceblue;
 }

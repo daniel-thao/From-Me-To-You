@@ -1,81 +1,85 @@
 .flex {
-    background: rgb(48, 48, 48);
-    display: flex;
-    width: 100%;
-    flex-direction: row;
+  background: rgb(48, 48, 48);
+  display: flex;
+  width: 100%;
+  flex-direction: row;
 }
 
 .flexRow {
-    justify-content: space-around;
+  justify-content: space-around;
 }
 .flexCenter {
-    justify-content: center;
+  justify-content: center;
 }
 
 .flexColumn {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: space-around; */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-around; */
 }
 
 .white {
-    color: aliceblue;
+  color: aliceblue;
 }
 
 .maxHeight {
-    height: 100vh;
+  height: 100vh;
 }
 
 .hide {
-    display: none;
+  display: none;
 }
 
 .show {
-    display: block;
+  display: block;
 }
 
 .textCenter {
-    text-align: center;
+  text-align: center;
 }
 
 .dModeText {
-    color:rgb(150, 150, 150);
+  color: rgb(150, 150, 150);
 }
 
 /* ======================== Padding ======================== */
 .topPaddingXL {
-    padding: 5em 0em 0em 0em;
+  padding: 5em 0em 0em 0em;
 }
 
 /* ======================== Margin ======================== */
 
 .topMarginL {
-    margin: 3em 0em 0em 0em;
+  margin: 3em 0em 0em 0em;
 }
 
 .topMarginXL {
-    margin: 5em 0em 0em 0em;
+  margin: 5em 0em 0em 0em;
 }
 
 /* ======================== Position ======================== */
 .positionStatic {
-    position: static;
+  position: static;
 }
 
 .positionRelative {
-    position: relative;
+  position: relative;
 }
 
 .positionStatic {
-    position: static;
+  position: static;
 }
 
 .positionStatic {
-    position: static;
+  position: static;
 }
-
 
 /* ======================== zIndex ======================== */
 .zIndex {
-    z-index: 10;
+  z-index: 10;
+}
+
+/* ======================== Scrolling ======================== */
+.scrollY {
+  overflow-y: scroll;
 }
