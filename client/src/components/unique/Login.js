@@ -3,7 +3,7 @@ import {useHistory} from "react-router-dom"
 
 // we have to deconstruct this function which is a react context because there is no default export at this location
 import { AuthContext } from "../../routes/auth";
-import HasAccountContext from "../../utils/HasAccountContext";
+import HasAccountContext from "../../contexts/HasAccountContext";
 
 // Import module CSS
 import CSS from "./login-register.module.css";

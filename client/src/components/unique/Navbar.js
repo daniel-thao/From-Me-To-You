@@ -12,7 +12,7 @@ import { faHome, faComment, faCog, faSearch } from "@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Import Context
-import NavbarIconContext from "../../utils/NavbarIconContext";
+import NavbarIconContext from "../../contexts/NavbarIconContext";
 
 // I need function that changes the icon of the search thing to an actual input bar
 

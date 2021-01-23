@@ -5,8 +5,8 @@ import gStyle from "../general.module.css";
 import CSS from "./homepage.module.css";
 
 // Import Context(s)
-import CreatePostContext from "../utils/CreatePostContext";
-import NavbarIconContext from "../utils/NavbarIconContext";
+import CreatePostContext from "../contexts/CreatePostContext";
+import NavbarIconContext from "../contexts/NavbarIconContext";
 import { AuthContext } from "../routes/auth";
 
 // import components

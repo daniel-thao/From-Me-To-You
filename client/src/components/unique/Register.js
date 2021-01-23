@@ -10,7 +10,7 @@ import gStyle from "../../general.module.css";
 
 // import the Auth context
 import { AuthContext } from "../../routes/auth";
-import HasAccountContext from "../../utils/HasAccountContext";
+import HasAccountContext from "../../contexts/HasAccountContext";
 
 export default function Register() {
   // deconstruct the things I need from the Auth context

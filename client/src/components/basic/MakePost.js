@@ -10,8 +10,8 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // context
-import CreatePostContext from "../../utils/CreatePostContext";
-import EditPostContext from "../../utils/EditPostContext";
+import CreatePostContext from "../../contexts/CreatePostContext";
+import EditPostContext from "../../contexts/EditPostContext";
 import { AuthContext } from "../../routes/auth";
 
 export default function MakePost() {
@@ -25,7 +25,7 @@ export default function MakePost() {
       content: postValue,
     });
 
-    setPost({ ...post, isEmpty: false });
+    setPost({ ...post, isEmpty: false, userInput: post.placeholder });
     setCreatingPost({ makingPost: false, finished: true });
   };
 

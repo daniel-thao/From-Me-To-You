@@ -11,9 +11,9 @@ import MakePost from "../basic/MakePost";
 import PostPlaceHolder from "../basic/PostPlaceHolder";
 
 // Import Contexts
-import EditPostContext from "../../utils/EditPostContext";
-import CreatePostContext from "../../utils/CreatePostContext";
-import NavbarIconContext from "../../utils/NavbarIconContext";
+import EditPostContext from "../../contexts/EditPostContext";
+import CreatePostContext from "../../contexts/CreatePostContext";
+import NavbarIconContext from "../../contexts/NavbarIconContext";
 
 import { AuthContext } from "../../routes/auth";
 
@@ -66,6 +66,13 @@ export default function Feed({ className }) {
     if (creatingPost.finished === true) {
       await axios.post("/api/users/genUserPost", { jwt: user }).then(async (userPost) => {
         const arrBasedOnTimeCreated = userPost.data.sort(compare).reverse();
+
+        for (let i = 0; i < arrBasedOnTimeCreated.length; i++) {
+          // arrBasedOnTimeCreated[i].timeStamp.substring(11, 16)
+          // console.log(arrBasedOnTimeCreated[i].timeStamp.substring(11, 16));
+          arrBasedOnTimeCreated[i].timeStampSmall = arrBasedOnTimeCreated[i].timeStamp.substring(11, 16)
+        }
+
         setPostFeed(arrBasedOnTimeCreated);
         setCreatingPost({ makingPost: false, finished: false });
       });
@@ -91,7 +98,7 @@ export default function Feed({ className }) {
                       ></FontAwesomeIcon>
                       <div className={`${CSS.userNameAndTime}`}>
                         <h6 className={`${CSS.offWhite}`}>{index.user}</h6>
-                        <h6 className={`${CSS.offWhite}`}>{index.timeStamp}</h6>
+                        <h6 className={`${CSS.offWhite}`}>{index.timeStampSmall}</h6>
                       </div>
                     </div>
                     <h6 className={`${CSS.offWhite}`}>{index.post}</h6>
@@ -106,7 +113,7 @@ export default function Feed({ className }) {
                       ></FontAwesomeIcon>
                       <div className={`${CSS.userNameAndTime}`}>
                         <h6 className={`${CSS.offWhite}`}>{index.user}</h6>
-                        <h6 className={`${CSS.offWhite}`}>{index.timeStamp}</h6>
+                        <h6 className={`${CSS.offWhite}`}>{index.timeStampSmall}</h6>
                       </div>
                     </div>
                     <h6 className={`${CSS.offWhite}`}>{index.post}</h6>

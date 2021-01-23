@@ -8,7 +8,7 @@ import Register from "../components/unique/Register";
 // Import module CSS
 
 // import Contexts
-import HasAccountContext from "../utils/HasAccountContext";
+import HasAccountContext from "../contexts/HasAccountContext";
 
 export default function Landing() {
   const [isRegistered, setIsRegistered] = useState(false);

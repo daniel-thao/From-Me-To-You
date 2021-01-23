@@ -5,8 +5,8 @@ import gStyle from "../../general.module.css";
 import CSS from "../unique/feed.module.css";
 
 // import context
-import CreatePostContext from "../../utils/CreatePostContext";
-import EditPostContext from "../../utils/EditPostContext";
+import CreatePostContext from "../../contexts/CreatePostContext";
+import EditPostContext from "../../contexts/EditPostContext";
 
 export default function PostPlaceHolder() {
   const { creatingPost, setCreatingPost } = useContext(CreatePostContext);
