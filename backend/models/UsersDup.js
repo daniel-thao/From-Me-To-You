@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     UsersDup.hasMany(models.Posts);
+    UsersDup.hasMany(models.RecentSearches);
+
   };
 
   return UsersDup;

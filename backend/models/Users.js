@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes, models) => {
     });
 
     Users.hasMany(models.Posts);
+    Users.hasMany(models.RecentSearches);
+
   };
 
   //   Users.associate = function (models) {

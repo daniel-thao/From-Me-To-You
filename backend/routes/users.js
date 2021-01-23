@@ -47,9 +47,6 @@ router.post("/register", async (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  console.log(
-    `\n\n${req.body.username}\n${req.body.email}\n${req.body.password}\n${req.body.confirmPwd}\n\n`
-  );
 
   const dataArr = [];
   /*
@@ -156,7 +153,7 @@ router.post("/login", async (req, res) => {
 
 /*
 ==========================================================================================
-Mark User that is Online
+Mark User that is Online --> Incomplete
 ==========================================================================================
 */
 router.put("/userOnline", async (req, res) => {
@@ -170,8 +167,6 @@ User Makes a Post
 */
 router.post("/post", async (req, res) => {
   // I want to put the user being passed in here through the body
-  console.log(`\n\n${req.body.jwt.name}\n${req.body.jwt.id}\n${req.body.jwt.email}\n\n`);
-  console.log(`\n\n${req.body.content}\n\n`);
 
   const dataArr = [];
 
@@ -190,7 +185,7 @@ router.post("/post", async (req, res) => {
 
 /*
 ==========================================================================================
-See the Post user just made
+See the Post user just made --> Incomplete, Still need to se posts from other users
 ==========================================================================================
 */
 router.post("/genUserPost", async (req, res) => {
@@ -201,11 +196,13 @@ router.post("/genUserPost", async (req, res) => {
 
   await db.Posts.findAll({ where: { UserId: req.body.jwt.id } }).then((data) => {
     getAllUserIds.push(data.map((index) => index.UserId));
-    postArr = data.map((index) => { return {timeStamp: index.createdAt, post: index.content}});
+    postArr = data.map((index) => {
+      return { timeStamp: index.createdAt, post: index.content };
+    });
   });
 
   for (let i = 0; i < getAllUserIds[0].length; i++) {
-    await db.Users.findOne({ where: { id: getAllUserIds[0][i] } }).then(async(data) => {
+    await db.Users.findOne({ where: { id: getAllUserIds[0][i] } }).then(async (data) => {
       postArr[i].user = data.username;
     });
   }
@@ -213,6 +210,232 @@ router.post("/genUserPost", async (req, res) => {
   // findUserArr.push(nameOfUsersArr);
 
   res.json(postArr);
+});
+
+/*
+==========================================================================================
+User just Searched Something
+==========================================================================================
+*/
+router.post("/activateSearch", async (req, res) => {
+  /* BODY
+    {
+      jwt: UserToken obj
+      userInput: "string"
+    }
+  */
+  const dataArr = [];
+  if (req.body.userInput !== "") {
+    // Check the Recent Search Tables on if there are too many searches made by a certain user
+    await db.RecentSearches.findAll({
+      where: { UserId: req.body.jwt.id },
+    }).then(async (recentData) => {
+      if (recentData.length > 9) {
+        await db.RecentSearches.destroy({ where: { id: recentData[0].id } });
+      }
+    });
+
+    await db.RecentSearches.create({
+      searched: req.body.userInput,
+      UserId: req.body.jwt.id,
+      UsersDupId: req.body.jwt.id,
+    });
+
+    // we also want to store up the suggestions Table as well
+    console.log(`\n\n${req.body.userInput.substring(0, 1)}\n\n`);
+    const noDbls = await db.Suggestions.findOne({
+      where: {
+        recommendation: req.body.userInput,
+      },
+    });
+    if (noDbls === null) {
+      await db.Suggestions.create({
+        recommendation: req.body.userInput,
+        firstLetter: req.body.userInput.substring(0, 1),
+        twoLetters: req.body.userInput.substring(0, 2),
+        threeLetters: req.body.userInput.substring(0, 3),
+        fourLetters: req.body.userInput.substring(0, 4),
+        fiveLetters: req.body.userInput.substring(0, 5),
+        sixLetters: req.body.userInput.substring(0, 6),
+        sevenLetters: req.body.userInput.substring(0, 7),
+        eightLetters: req.body.userInput.substring(0, 8),
+        nineLetters: req.body.userInput.substring(0, 9),
+        tenLetters: req.body.userInput.substring(0, 10),
+        elevenLetters: req.body.userInput.substring(0, 11),
+        twelveLetters: req.body.userInput.substring(0, 12),
+        thirteenLetters: req.body.userInput.substring(0, 13),
+        fourteenLetters: req.body.userInput.substring(0, 14),
+        fifteenLetters: req.body.userInput.substring(0, 15),
+        sixteenLetters: req.body.userInput.substring(0, 16),
+      });
+    }
+  }
+
+  const recentSearchResults = await db.RecentSearches.findAll({
+    where: { UserId: req.body.jwt.id },
+  });
+
+  dataArr.push(
+    recentSearchResults.map((index) => {
+      return { searched: index.searched, key: index.createdAt };
+    })
+  );
+
+  // Create a search in the Recent Searches Table
+
+  res.json(dataArr);
+});
+
+/*
+==========================================================================================
+Get Suggestions for Searching
+==========================================================================================
+*/
+router.put("/suggestions", async (req, res) => {
+  /* BODY
+    {
+      userInput: "string"
+    }
+  */
+  const dataArr = [];
+  const helper = async function (string, propChooser, stringBegin, stringEnd) {
+    await db.Suggestions.findAll({
+      // adding the [] around the keys make them dynamic
+      where: { [propChooser]: string.substring(stringBegin, stringEnd) },
+    }).then((data) => {
+      // res.json(dataArr);
+      const dataSorted = {
+        batchOne: [],
+        batchOneView: false,
+        batchTwo: [],
+        batchTwoView: false,
+        batchThree: [],
+        batchThreeView: false,
+        batchFour: [],
+        batchFourView: false,
+        batchFive: [],
+        batchFiveView: false,
+        batchSix: [],
+        batchSixView: false,
+        batchSeven: [],
+        batchSevenView: false,
+        batchEight: [],
+        batchEightView: false,
+        batchNine: [],
+        batchNineView: false,
+        batchTen: [],
+        batchTenView: false,
+        batchEleven: [],
+        batchElevenView: false,
+        batchTwelve: [],
+        batchTwelveView: false,
+        batchThirteen: [],
+        batchThirteenView: false,
+        batchFourteen: [],
+        batchFourteenView: false,
+        batchFifteen: [],
+        batchFifteenView: false,
+        batchSixteen: [],
+        batchSixteenView: false,
+      };
+
+
+      for (let i = 0; i < data.length; i++) {
+        // const dataObj = {};
+        // dataObj.recommendation = data[i].recommendation;
+        if (i < 8) {
+          dataSorted.batchOne.push(data[i].recommendation);
+        } else if (i > 7 && i < 16) {
+          dataSorted.batchTwo.push(data[i].recommendation);
+        } else if (i > 15 && i < 24) {
+          dataSorted.batchThree.push(data[i].recommendation);
+        } else if (i > 23 && i < 32) {
+          dataSorted.batchFour.push(data[i].recommendation);
+        } else if (i > 31 && i < 40) {
+          dataSorted.batchFive.push(data[i].recommendation);
+        } else if (i > 39 && i < 48) {
+          dataSorted.batchSix.push(data[i].recommendation);
+        } else if (i > 47 && i < 56) {
+          dataSorted.batchSeven.push(data[i].recommendation);
+        } else if (i > 55 && i < 64) {
+          dataSorted.batchEight.push(data[i].recommendation);
+        } else if (i > 63 && i < 72) {
+          dataSorted.batchNine.push(data[i].recommendation);
+        } else if (i > 71 && i < 80) {
+          dataSorted.batchTen.push(data[i].recommendation);
+        } else if (i > 79 && i < 88) {
+          dataSorted.batchEleven.push(data[i].recommendation);
+        } else if (i > 87 && i < 96) {
+          dataSorted.batchTwelve.push(data[i].recommendation);
+        } else if (i > 95 && i < 104) {
+          dataSorted.batchThirteen.push(data[i].recommendation);
+        } else if (i > 103 && i < 112) {
+          dataSorted.batchFourteen.push(data[i].recommendation);
+        } else if (i > 111 && i < 120) {
+          dataSorted.batchFifteen.push(data[i].recommendation);
+        } else if (i > 119 && i < 128) {
+          dataSorted.batchSixteen.push(data[i].recommendation);
+        }
+      }
+      res.json(dataSorted);
+    });
+  };
+
+  const propertyManager = [
+    "firstLetter",
+    "twoletters",
+    "threeLetters",
+    "fourLetters",
+    "fiveLetters",
+    "sixLetters",
+    "sevenLetters",
+    "eightLetters",
+    "nineLetters",
+    "tenLetters",
+    "elevenLetters",
+    "twelveLetters",
+    "thirteenLetters",
+    "fourteenLetters",
+    "fifteenLetters",
+    "sixteenLetters",
+  ];
+  console.log(`\n\n${req.body.userInput}\n\n`);
+  switch (req.body.userInput.length) {
+    case 1:
+      return helper(req.body.userInput, propertyManager[0], 0, 1);
+    case 2:
+      return helper(req.body.userInput, propertyManager[1], 0, 2);
+    case 3:
+      return helper(req.body.userInput, propertyManager[2], 0, 3);
+    case 4:
+      return helper(req.body.userInput, propertyManager[3], 0, 4);
+    case 5:
+      return helper(req.body.userInput, propertyManager[4], 0, 5);
+    case 6:
+      return helper(req.body.userInput, propertyManager[5], 0, 6);
+    case 7:
+      return helper(req.body.userInput, propertyManager[6], 0, 7);
+    case 8:
+      return helper(req.body.userInput, propertyManager[7], 0, 8);
+    case 9:
+      return helper(req.body.userInput, propertyManager[8], 0, 9);
+    case 10:
+      return helper(req.body.userInput, propertyManager[9], 0, 10);
+    case 11:
+      return helper(req.body.userInput, propertyManager[10], 0, 11);
+    case 12:
+      return helper(req.body.userInput, propertyManager[11], 0, 12);
+    case 13:
+      return helper(req.body.userInput, propertyManager[12], 0, 13);
+    case 14:
+      return helper(req.body.userInput, propertyManager[13], 0, 14);
+    case 15:
+      return helper(req.body.userInput, propertyManager[14], 0, 15);
+    case 16:
+      return helper(req.body.userInput, propertyManager[15], 0, 16);
+    default:
+      return;
+  }
 });
 
 module.exports = router;

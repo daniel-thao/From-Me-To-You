@@ -1,28 +1,28 @@
 // "use strict";
 module.exports = (sequelize, DataTypes) => {
-    const Posts = sequelize.define(
-      "Posts",
+    const RecentSearches = sequelize.define(
+      "RecentSearches",
       {
-        content: DataTypes.STRING(1234),
+        searched: DataTypes.STRING(1234),
       },
       {
         freezeTableName: true,
       }
     );
   
-    Posts.associate = function (models) {
-      Posts.belongsTo(models.Users, {
+    RecentSearches.associate = function (models) {
+      RecentSearches.belongsTo(models.Users, {
           foreignKey: {
               allowNull: false
           }
       })
 
-      Posts.belongsTo(models.UsersDup, {
+      RecentSearches.belongsTo(models.UsersDup, {
         foreignKey: {
             allowNull: false
         }
     })
     };
-    return Posts;
+    return RecentSearches;
   };
   
