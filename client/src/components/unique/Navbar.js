@@ -25,7 +25,7 @@ export default function Navbar() {
         <FontAwesomeIcon
           icon={faSearch}
           onClick={() => {
-            setWorkSpaces({
+            setWorkSpaces({...workSpaces,
               search: true,
               home: false,
               chat: false,
@@ -41,8 +41,13 @@ export default function Navbar() {
             setWorkSpaces({
               search: false,
               home: true,
+              isSearchingHome: true,
               chat: false,
+              isSearchingChat: false,
               settings: false,
+              isSearchingSettings: false,
+              peopleFinder: false,
+              isSearchingPF: false,
             });
           }}
         />
@@ -54,8 +59,13 @@ export default function Navbar() {
             setWorkSpaces({
               search: false,
               home: false,
+              isSearchingHome: false,
               chat: true,
+              isSearchingChat: true,
               settings: false,
+              isSearchingSettings: false,
+              peopleFinder: false,
+              isSearchingPF: false,
             });
           }}
         />
@@ -67,8 +77,13 @@ export default function Navbar() {
             setWorkSpaces({
               search: false,
               home: false,
+              isSearchingHome: false,
               chat: false,
+              isSearchingChat: false,
               settings: true,
+              isSearchingSettings: true,
+              peopleFinder: false,
+              isSearchingPF: false,
             });
           }}
         />

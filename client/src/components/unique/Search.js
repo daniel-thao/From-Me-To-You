@@ -1,54 +1,35 @@
 import React, { useState, useContext, useEffect } from "react";
-import axios from "axios";
 
 // Import CSS Modules
 import gStyle from "../../general.module.css";
 import CSS from "./search.module.css";
 
+// Import Components
+import SuggRender from "../basic/SuggRender";
+import SearchBlock from "../basic/SearchBlock";
+
 // Import Contexts
 import NavbarIconContext from "../../contexts/NavbarIconContext";
 import { AuthContext } from "../../routes/auth";
 
+// import External Functions
+import { searched, dbSuggestions, suggRefresher } from "../../utils/components/unique/searchUtil";
+
 // Import FontAwesome
 import { faHandPointRight, faRedoAlt, faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // I need function that changes the icon of the search thing to an actual input bar
-
 export default function Search({ className }) {
   const [userTyping, setUserTyping] = useState("");
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
   const { user } = useContext(AuthContext);
   const [userRecentSearches, setUserRecentSearches] = useState([]);
-  const [suggestionsForUser, setSuggestionsForUser] = useState({});
-  // const [timer, setTimer] = useState();
-
-  const searched = async function () {
-    await axios
-      .post("/api/users/activateSearch", {
-        jwt: user,
-        userInput: userTyping,
-      })
-      .then((data) => setUserRecentSearches(data.data[0].reverse()));
-  };
-
-  const dbSuggestions = async function (text) {
-    console.log("started");
-    axios
-      .put("/api/users/suggestions", {
-        userInput: text,
-      })
-      .then(async (data) => {
-        // console.log(data.data);
-        const incomingData = data.data;
-        incomingData.batchOneView = true;
-        // console.log(incomingData);
-        setSuggestionsForUser(incomingData);
-      });
-  };
+  const [suggestionsForUser, setSuggestionsForUser] = useState([]);
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
-    searched();
+    // searched(user, userTyping, setUserRecentSearches);
+    // dbSuggestions("", setCounter, setSuggestionsForUser);
   }, []);
 
   return (
@@ -56,7 +37,15 @@ export default function Search({ className }) {
       <div
         className={`${CSS.overlay} ${workSpaces.search ? CSS.enableSearch : CSS.nothing}`}
         onClick={() => {
-          setWorkSpaces({ ...workSpaces, search: false, home: true });
+          if (workSpaces.isSearchingHome) {
+            setWorkSpaces({ ...workSpaces, search: false, home: true });
+          } else if (workSpaces.isSearchingChat) {
+            setWorkSpaces({ ...workSpaces, search: false, chat: true });
+          } else if (workSpaces.isSearchingSettings) {
+            setWorkSpaces({ ...workSpaces, search: false, settings: true });
+          } else if (workSpaces.isSearchingPF) {
+            setWorkSpaces({ ...workSpaces, search: false, peopleFinder: true });
+          }
         }}
       ></div>
 
@@ -67,89 +56,63 @@ export default function Search({ className }) {
               className={CSS.searchBox}
               onKeyPress={(e) => {
                 if (e.key === "Enter" && userTyping !== "") {
-                  searched();
+                  searched(user, userTyping, setUserRecentSearches, setWorkSpaces);
                 }
               }}
               onChange={async (e) => {
                 setUserTyping(e.target.value);
-                await dbSuggestions(e.target.value);
+                await dbSuggestions(e.target.value, setCounter, setSuggestionsForUser);
               }}
-              // onKeyUp={(e) => {
-              //   clearTimeout(timer);
-              //   timer()
-              // }}
-              // onKeyDown={(e) => {
-              //   clearTimeout(timer);
-              // }}
               value={userTyping}
-            ></input>
-            {/* only one of these should be active at a time and these should be mappingng data from the Database and I need to Map things*/}
+            />
+
             {userTyping === "" ? (
               userRecentSearches.map(function (index) {
                 return (
-                  <div key={index.key} className={`${CSS.recentSearches}`}>
-                    <FontAwesomeIcon
-                      className={`${CSS.reuseIcon}`}
-                      icon={faAngleDoubleRight}
-                    ></FontAwesomeIcon>
-                    <h5 className={`${CSS.searchText}`}>{index.searched}</h5>
-                  </div>
+                  <SearchBlock
+                    mapIdx={index}
+                    faIcon={faAngleDoubleRight}
+                    onClick={() => {
+                      setWorkSpaces({
+                        ...workSpaces,
+                        search: false,
+                        peopleFinder: true,
+                        isSearchingChat: false,
+                        isSearchingHome: false,
+                        isSearchingSettings: false,
+                        isSearchingPF: true,
+                      });
+                    }}
+                  ></SearchBlock>
                 );
               })
             ) : (
               <div>
-                <div className={`${CSS.recentSearches}`}>
-                  <FontAwesomeIcon
-                    className={`${CSS.chooseIcon}`}
-                    icon={faHandPointRight}
-                  ></FontAwesomeIcon>
-                  <h5 className={`${CSS.searchText}`}>{userTyping}</h5>
-                </div>
+                <SearchBlock faIcon={faHandPointRight} userTyping={userTyping}></SearchBlock>
 
-                {suggestionsForUser.batchOneView ? (
-                  suggestionsForUser.batchOne.map(function (index) {
-                    return (
-                      <div key={index.key} className={`${CSS.recentSearches}`}>
-                        <FontAwesomeIcon
-                          className={`${CSS.chooseIcon}`}
-                          icon={faHandPointRight}
-                        ></FontAwesomeIcon>
-                        <h5 className={`${CSS.searchText}`}>{index}</h5>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-                {suggestionsForUser.batchTwoView ? (
-                  suggestionsForUser.batchTwo.map(function (index) {
-                    return (
-                      <div key={index.key} className={`${CSS.recentSearches}`}>
-                        <FontAwesomeIcon
-                          className={`${CSS.chooseIcon}`}
-                          icon={faHandPointRight}
-                        ></FontAwesomeIcon>
-                        <h5 className={`${CSS.searchText}`}>{index}</h5>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-
-                <div
-                  className={`${CSS.recentSearches}`}
+                <SuggRender
+                  counter={counter}
+                  suggestionsForUser={suggestionsForUser}
                   onClick={() => {
-                    setSuggestionsForUser({...suggestionsForUser, batchOneView: false, batchTwoView: true});
-                    console.log(suggestionsForUser);
+                    setWorkSpaces({
+                      ...workSpaces,
+                      search: false,
+                      peopleFinder: true,
+                      isSearchingChat: false,
+                      isSearchingHome: false,
+                      isSearchingSettings: false,
+                      isSearchingPF: true,
+                    });
                   }}
-                >
-                  <FontAwesomeIcon
-                    className={`${CSS.chooseIcon}`}
-                    icon={faRedoAlt}
-                  ></FontAwesomeIcon>
-                  <h5 className={`${CSS.searchText}`}>{userTyping}</h5>
-                </div>
+                ></SuggRender>
+
+                <SearchBlock
+                  faIcon={faRedoAlt}
+                  onClick={() => {
+                    suggRefresher(counter, setCounter, suggestionsForUser);
+                  }}
+                  userTyping={userTyping}
+                ></SearchBlock>
               </div>
             )}
           </div>

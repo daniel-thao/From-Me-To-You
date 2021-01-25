@@ -25,7 +25,8 @@
 
 .searchResults {
   width: 18em;
-  height: calc(100vh / 1.485);
+  /* height: calc(100vh / 1.485); */
+  height: auto;
   background: rgb(36, 36, 36);
   cursor: pointer;
 }

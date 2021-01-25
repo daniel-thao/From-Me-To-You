@@ -303,78 +303,43 @@ router.put("/suggestions", async (req, res) => {
       // adding the [] around the keys make them dynamic
       where: { [propChooser]: string.substring(stringBegin, stringEnd) },
     }).then((data) => {
-      // res.json(dataArr);
-      const dataSorted = {
-        batchOne: [],
-        batchOneView: false,
-        batchTwo: [],
-        batchTwoView: false,
-        batchThree: [],
-        batchThreeView: false,
-        batchFour: [],
-        batchFourView: false,
-        batchFive: [],
-        batchFiveView: false,
-        batchSix: [],
-        batchSixView: false,
-        batchSeven: [],
-        batchSevenView: false,
-        batchEight: [],
-        batchEightView: false,
-        batchNine: [],
-        batchNineView: false,
-        batchTen: [],
-        batchTenView: false,
-        batchEleven: [],
-        batchElevenView: false,
-        batchTwelve: [],
-        batchTwelveView: false,
-        batchThirteen: [],
-        batchThirteenView: false,
-        batchFourteen: [],
-        batchFourteenView: false,
-        batchFifteen: [],
-        batchFifteenView: false,
-        batchSixteen: [],
-        batchSixteenView: false,
-      };
 
+      const dataSorted = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
 
       for (let i = 0; i < data.length; i++) {
         // const dataObj = {};
-        // dataObj.recommendation = data[i].recommendation;
         if (i < 8) {
-          dataSorted.batchOne.push(data[i].recommendation);
+          dataSorted[0].push(data[i].recommendation);
         } else if (i > 7 && i < 16) {
-          dataSorted.batchTwo.push(data[i].recommendation);
+          dataSorted[1].push(data[i].recommendation);
         } else if (i > 15 && i < 24) {
-          dataSorted.batchThree.push(data[i].recommendation);
+          dataSorted[2].push(data[i].recommendation);
         } else if (i > 23 && i < 32) {
-          dataSorted.batchFour.push(data[i].recommendation);
+          dataSorted[3].push(data[i].recommendation);
         } else if (i > 31 && i < 40) {
-          dataSorted.batchFive.push(data[i].recommendation);
+          dataSorted[4].push(data[i].recommendation);
         } else if (i > 39 && i < 48) {
-          dataSorted.batchSix.push(data[i].recommendation);
+          dataSorted[5].push(data[i].recommendation);
         } else if (i > 47 && i < 56) {
-          dataSorted.batchSeven.push(data[i].recommendation);
+          dataSorted[6].push(data[i].recommendation);
         } else if (i > 55 && i < 64) {
-          dataSorted.batchEight.push(data[i].recommendation);
+          dataSorted[7].push(data[i].recommendation);
         } else if (i > 63 && i < 72) {
-          dataSorted.batchNine.push(data[i].recommendation);
+          dataSorted[8].push(data[i].recommendation);
         } else if (i > 71 && i < 80) {
-          dataSorted.batchTen.push(data[i].recommendation);
+          dataSorted[9].push(data[i].recommendation);
         } else if (i > 79 && i < 88) {
-          dataSorted.batchEleven.push(data[i].recommendation);
+          dataSorted[10].push(data[i].recommendation);
         } else if (i > 87 && i < 96) {
-          dataSorted.batchTwelve.push(data[i].recommendation);
+          dataSorted[11].push(data[i].recommendation);
         } else if (i > 95 && i < 104) {
-          dataSorted.batchThirteen.push(data[i].recommendation);
+          dataSorted[12].push(data[i].recommendation);
         } else if (i > 103 && i < 112) {
-          dataSorted.batchFourteen.push(data[i].recommendation);
+          dataSorted[13].push(data[i].recommendation);
         } else if (i > 111 && i < 120) {
-          dataSorted.batchFifteen.push(data[i].recommendation);
+          dataSorted[14].push(data[i].recommendation);
         } else if (i > 119 && i < 128) {
-          dataSorted.batchSixteen.push(data[i].recommendation);
+          dataSorted[15].push(data[i].recommendation);
         }
       }
       res.json(dataSorted);

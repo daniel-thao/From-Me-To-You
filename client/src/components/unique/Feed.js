@@ -9,6 +9,7 @@ import CSS from "./feed.module.css";
 import Container from "../basic/Container";
 import MakePost from "../basic/MakePost";
 import PostPlaceHolder from "../basic/PostPlaceHolder";
+import PostBlock from "../basic/PostBlock";
 
 // Import Contexts
 import EditPostContext from "../../contexts/EditPostContext";
@@ -19,7 +20,9 @@ import { AuthContext } from "../../routes/auth";
 
 // Import FontAwesome
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+// Import external Functions
+import { compare } from "../../utils/components/unique/feedUtil";
 
 // I need functions that set the feed with the posts from other users
 // Each of these posts will go into the container tag down below and I should honestly have a useEffect that updates whenever theuser has exhausted the set amount of posts that I've shown them kind of like youtube and such
@@ -42,22 +45,9 @@ export default function Feed({ className }) {
   const [postFeed, setPostFeed] = useState([]);
   const [feedIsShowing, setFeedIsShowing] = useState(false);
 
-  const compare = function (a, b) {
-    const bandA = a.timeStamp;
-    const bandB = b.timeStamp;
-
-    let comparison = 0;
-    if (bandA > bandB) {
-      comparison = 1;
-    } else if (bandA < bandB) {
-      comparison = -1;
-    }
-    return comparison;
-  };
-
   // this is going to be used everytime a post has been created
   useEffect(async () => {
-    if (feedIsShowing) {
+    if (!feedIsShowing) {
       setFeedIsShowing(false);
     } else {
       setFeedIsShowing(true);
@@ -70,7 +60,10 @@ export default function Feed({ className }) {
         for (let i = 0; i < arrBasedOnTimeCreated.length; i++) {
           // arrBasedOnTimeCreated[i].timeStamp.substring(11, 16)
           // console.log(arrBasedOnTimeCreated[i].timeStamp.substring(11, 16));
-          arrBasedOnTimeCreated[i].timeStampSmall = arrBasedOnTimeCreated[i].timeStamp.substring(11, 16)
+          arrBasedOnTimeCreated[i].timeStampSmall = arrBasedOnTimeCreated[i].timeStamp.substring(
+            11,
+            16
+          );
         }
 
         setPostFeed(arrBasedOnTimeCreated);
@@ -88,37 +81,20 @@ export default function Feed({ className }) {
           <Container className={`${CSS.feedColumn}`}>
             <PostPlaceHolder></PostPlaceHolder>
             {/* This basically shows the posts no matter what, but if it's not updated, SOo in this case the useEffect is fine?*/}
+
             {feedIsShowing
               ? postFeed.map((index) => (
-                  <div key={index.timeStamp} className={`${CSS.feedPost}`}>
-                    <div className={`${CSS.userData}`}>
-                      <FontAwesomeIcon
-                        className={`${CSS.userProfilePlaceholder}`}
-                        icon={faUserCircle}
-                      ></FontAwesomeIcon>
-                      <div className={`${CSS.userNameAndTime}`}>
-                        <h6 className={`${CSS.offWhite}`}>{index.user}</h6>
-                        <h6 className={`${CSS.offWhite}`}>{index.timeStampSmall}</h6>
-                      </div>
-                    </div>
-                    <h6 className={`${CSS.offWhite}`}>{index.post}</h6>
-                  </div>
+                  <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>
+                ))
+              : <></>}
+
+            {/* {feedIsShowing
+              ? postFeed.map((index) => (
+                  <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>
                 ))
               : postFeed.map((index) => (
-                  <div key={index.timeStamp} className={`${CSS.feedPost}`}>
-                    <div className={`${CSS.userData}`}>
-                      <FontAwesomeIcon
-                        className={`${CSS.userProfilePlaceholder}`}
-                        icon={faUserCircle}
-                      ></FontAwesomeIcon>
-                      <div className={`${CSS.userNameAndTime}`}>
-                        <h6 className={`${CSS.offWhite}`}>{index.user}</h6>
-                        <h6 className={`${CSS.offWhite}`}>{index.timeStampSmall}</h6>
-                      </div>
-                    </div>
-                    <h6 className={`${CSS.offWhite}`}>{index.post}</h6>
-                  </div>
-                ))}
+                  <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>
+                ))} */}
           </Container>
         </div>
 
