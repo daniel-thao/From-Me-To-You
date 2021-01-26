@@ -52,14 +52,14 @@ router.post("/makeFriendReq", async (req, res) => {
   }
   */
 
-  // IMPORTANT!!!!! send the email info of Friend Req SENDER that will eventually be stored on the Front End as a state because I will then find the User and its Dup by the email
-  await db.Users.findOne({ where: { EmailId: req.body.sender } }).then(async (data) => {
+  // IMPORTANT!!!!! Originally I was only going to send the email info to the FE and then get it back at this point, but along the way, that changed and I now am passing in the id's, usernames and timstamps of both users
+  await db.Users.findOne({ where: { id: req.body.sender.id } }).then(async (data) => {
     dataArr.push(data);
   });
 
   // Also find the Receiever of the Friend Request and their Dup
   await db.UsersDup.findOne({
-    where: { EmailId: req.body.receiver },
+    where: { id: req.body.receiver.id },
   }).then(async (data) => {
     dataArr.push(data);
   });
@@ -67,11 +67,11 @@ router.post("/makeFriendReq", async (req, res) => {
   // Before I even create the FR, I need to see if it already exists in the FR table
   // So we are checking to see if the current sender already has a request in or if the receiver has actually sent a FR in the past to the current sender
   const senderCheck = await db.UsersFriendReq.findOne({
-    where: { UserId: dataArr[0].id, UsersDupId: dataArr[1].id },
+    where: { UserId: req.body.sender.id, UsersDupId: req.body.receiver.id },
   });
 
   const receiverCheck = await db.UsersFriendReq.findOne({
-    where: { UserId: dataArr[1].id, UsersDupId: dataArr[0].id },
+    where: { UserId: req.body.receiver.id, UsersDupId: req.body.sender.id },
   });
 
   // If there is already a FR between the two users, then stop the process, else go through with making the connection

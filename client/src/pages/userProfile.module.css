@@ -1,28 +1,28 @@
 .background {
-    background: rgb(32, 32, 32);
+  background: rgb(32, 32, 32);
 }
 
 .profilePic {
-    font-size: 15em;
+  font-size: 15em;
 }
 
 .postsAndFriends {
-    width: calc(100vw / 1.5);
+  width: calc(100vw / 1.5);
 }
 
 .userFriends {
-    width: 40%;
-    margin: 0em .5em 0em 0em;
-    background:lightcoral;
+  width: 40%;
+  margin: 0em 0.5em 0em 0em;
+  background: lightcoral;
 }
 
 .userPosts {
-    /* background: lightgoldenrodyellow; */
+  /* background: lightgoldenrodyellow; */
 }
 
 .feedColumn {
-    width: calc(100vw / 2);
-    min-width: 27em;
-    max-width: calc(50em);
-    /* background: lightblue; */
-  }
+  width: calc(100vw / 2);
+  min-width: 27em;
+  max-width: calc(50em);
+  /* background: lightblue; */
+}

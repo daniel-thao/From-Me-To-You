@@ -12,3 +12,13 @@
 .userData {
   display: flex;
 }
+
+.addFriendBtn {
+  background:rgb(160, 0, 75);
+  padding: .8em;
+  border-radius: .3em;
+}
+
+.addFriendBtn:hover {
+  cursor: pointer;
+}

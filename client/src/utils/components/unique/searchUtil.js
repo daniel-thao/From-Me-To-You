@@ -21,8 +21,8 @@ export const searched = async function (
         const recents = data.data[0].reverse();
         setURS(recents);
         // console.log(recents[0].searched);
-
         if (enterVal) {
+          history.push("/frommetoyou");
           // console.log("FIRST PART OF THE IF ")
           setWorkSpaces({
             ...workSpaces,
@@ -53,6 +53,7 @@ export const searched = async function (
         // console.log(recents[0].searched);
 
         if (enterVal) {
+          history.push("/frommetoyou");
           console.log("Second PART OF THE IF ");
           setWorkSpaces({
             ...workSpaces,
@@ -81,6 +82,7 @@ export const searched = async function (
         const recents = data.data[0].reverse();
         setURS(recents);
         // console.log(recents[0].searched);
+
         console.log("Third PART OF THE IF ");
       });
   }
