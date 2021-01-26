@@ -11,6 +11,8 @@ const NavbarIconContext = React.createContext({
     isSearchingSettings: false,
     peopleFinder: false,
     isSearchingPF: false,
+    userProfile: false,
+    isOnUP: false
 });
 
 export default NavbarIconContext;

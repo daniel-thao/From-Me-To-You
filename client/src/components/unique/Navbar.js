@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 // Import CSS Modules
 import gStyle from "../../general.module.css";
@@ -8,28 +9,40 @@ import CSS from "./navbar.module.css";
 import IconBtn from "../basic/IconBtn";
 
 // FontAwesome Stuff
-import { faHome, faComment, faCog, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faComment,
+  faCog,
+  faSearch,
+  faStreetView,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Import Context
 import NavbarIconContext from "../../contexts/NavbarIconContext";
+import { AuthContext } from "../../routes/auth";
 
 // I need function that changes the icon of the search thing to an actual input bar
 
 export default function Navbar() {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
+  const { user } = useContext(AuthContext);
+
+  const history = useHistory();
 
   return (
-    <div className={`${gStyle.flex} ${gStyle.flexRow} ${CSS.navbar} ${workSpaces.search ? gStyle.zIndex: CSS.nothing}`}>
+    <div
+      className={`${gStyle.flex} ${gStyle.flexRow} ${CSS.navbar} ${
+        workSpaces.search ? gStyle.zIndex : CSS.nothing
+      }`}
+    >
       <IconBtn className={CSS.icon}>
         <FontAwesomeIcon
           icon={faSearch}
           onClick={() => {
-            setWorkSpaces({...workSpaces,
+            setWorkSpaces({
+              ...workSpaces,
               search: true,
-              home: false,
-              chat: false,
-              settings: false,
             });
           }}
         />
@@ -48,7 +61,10 @@ export default function Navbar() {
               isSearchingSettings: false,
               peopleFinder: false,
               isSearchingPF: false,
+              userProfile: false,
+              isOnUP: false,
             });
+            history.push(`/frommetoyou/`);
           }}
         />
       </IconBtn>
@@ -66,7 +82,31 @@ export default function Navbar() {
               isSearchingSettings: false,
               peopleFinder: false,
               isSearchingPF: false,
+              userProfile: false,
+              isOnUP: false,
             });
+            history.push(`/frommetoyou/`);
+          }}
+        />
+      </IconBtn>
+      <IconBtn className={CSS.icon}>
+        <FontAwesomeIcon
+          icon={faStreetView}
+          onClick={() => {
+            setWorkSpaces({
+              search: false,
+              home: false,
+              isSearchingHome: false,
+              chat: false,
+              isSearchingChat: false,
+              settings: false,
+              isSearchingSettings: false,
+              peopleFinder: false,
+              isSearchingPF: false,
+              userProfile: false,
+              isOnUP: true,
+            });
+            history.push(`/frommetoyou/${user.name}`);
           }}
         />
       </IconBtn>
@@ -84,7 +124,10 @@ export default function Navbar() {
               isSearchingSettings: true,
               peopleFinder: false,
               isSearchingPF: false,
+              userProfile: false,
+              isOnUP: false,
             });
+            history.push(`/frommetoyou/`);
           }}
         />
       </IconBtn>

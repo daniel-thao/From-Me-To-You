@@ -1,0 +1,28 @@
+.background {
+    background: rgb(32, 32, 32);
+}
+
+.profilePic {
+    font-size: 15em;
+}
+
+.postsAndFriends {
+    width: calc(100vw / 1.5);
+}
+
+.userFriends {
+    width: 30%;
+    margin: 0em 2em 0em 0em;
+    background:lightcoral;
+}
+
+.userPosts {
+    background: lightgoldenrodyellow;
+}
+
+.feedColumn {
+    width: calc(100vw / 2);
+    min-width: 27em;
+    max-width: calc(50em);
+    /* background: lightblue; */
+  }

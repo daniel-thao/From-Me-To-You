@@ -7,9 +7,6 @@ import FeedCSS from "../unique/feed.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function PostBlock(props) {
-  if (props.mapIdx) {
-    console.log(props.mapIdx.timeStamp);
-  }
   return (
     <div>
       <div key={props.mapIdx.timeStamp} className={`${FeedCSS.feedPost}`}>

@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 // Import CSS Modules
 import gStyle from "../../general.module.css";
@@ -26,11 +27,14 @@ export default function Search({ className }) {
   const [userRecentSearches, setUserRecentSearches] = useState([]);
   const [suggestionsForUser, setSuggestionsForUser] = useState([]);
   const [counter, setCounter] = useState(0);
+  const history = useHistory();
 
   useEffect(() => {
-    // searched(user, userTyping, setUserRecentSearches);
+    if (workSpaces.search) {
+      searched(user, userTyping, setUserRecentSearches, workSpaces, setWorkSpaces, history);
+    }
     // dbSuggestions("", setCounter, setSuggestionsForUser);
-  }, []);
+  }, [workSpaces.search]);
 
   return (
     <div className={`${className} ${CSS.searchWrapper}`}>
@@ -45,6 +49,8 @@ export default function Search({ className }) {
             setWorkSpaces({ ...workSpaces, search: false, settings: true });
           } else if (workSpaces.isSearchingPF) {
             setWorkSpaces({ ...workSpaces, search: false, peopleFinder: true });
+          } else if (workSpaces.isOnUP) {
+            setWorkSpaces({ ...workSpaces, search: false });
           }
         }}
       ></div>
@@ -56,7 +62,15 @@ export default function Search({ className }) {
               className={CSS.searchBox}
               onKeyPress={(e) => {
                 if (e.key === "Enter" && userTyping !== "") {
-                  searched(user, userTyping, setUserRecentSearches, setWorkSpaces);
+                  searched(
+                    user,
+                    userTyping,
+                    setUserRecentSearches,
+                    workSpaces,
+                    setWorkSpaces,
+                    history,
+                    e.key
+                  );
                 }
               }}
               onChange={async (e) => {
@@ -70,41 +84,45 @@ export default function Search({ className }) {
               userRecentSearches.map(function (index) {
                 return (
                   <SearchBlock
-                    mapIdx={index}
                     faIcon={faAngleDoubleRight}
+                    mapIdx={index}
+                    userTyping={userTyping}
                     onClick={() => {
-                      setWorkSpaces({
-                        ...workSpaces,
-                        search: false,
-                        peopleFinder: true,
-                        isSearchingChat: false,
-                        isSearchingHome: false,
-                        isSearchingSettings: false,
-                        isSearchingPF: true,
-                      });
+                      // putting this function in the searchblock nested ternary made it go haywire, so it's staying out here
+                      searched(
+                        user,
+                        userTyping,
+                        setUserRecentSearches,
+                        workSpaces,
+                        setWorkSpaces,
+                        history,
+                        index.searched
+                      );
                     }}
                   ></SearchBlock>
                 );
               })
             ) : (
               <div>
-                <SearchBlock faIcon={faHandPointRight} userTyping={userTyping}></SearchBlock>
+                <SearchBlock
+                  faIcon={faHandPointRight}
+                  setUserRecentSearches={setUserRecentSearches}
+                  userTyping={userTyping}
+                ></SearchBlock>
 
-                <SuggRender
-                  counter={counter}
-                  suggestionsForUser={suggestionsForUser}
-                  onClick={() => {
-                    setWorkSpaces({
-                      ...workSpaces,
-                      search: false,
-                      peopleFinder: true,
-                      isSearchingChat: false,
-                      isSearchingHome: false,
-                      isSearchingSettings: false,
-                      isSearchingPF: true,
-                    });
-                  }}
-                ></SuggRender>
+                {suggestionsForUser.length > 0 ? (
+                  suggestionsForUser[counter].map(function (index) {
+                    return (
+                      <SuggRender
+                        mapIdx={index}
+                        setUserRecentSearches={setUserRecentSearches}
+                        userTyping={userTyping}
+                      ></SuggRender>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
 
                 <SearchBlock
                   faIcon={faRedoAlt}

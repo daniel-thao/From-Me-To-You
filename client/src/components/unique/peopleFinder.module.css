@@ -1,3 +1,14 @@
 .background {
-    background: rgb(32, 32, 32);
+  background: rgb(32, 32, 32);
+}
+
+.peoplesColumn {
+  width: calc(100vw / 2);
+  min-width: 27em;
+  max-width: calc(50em);
+  /* background: lightblue; */
+}
+
+.userData {
+  display: flex;
 }

@@ -17,7 +17,7 @@ function App() {
       <Router>
         <Route exact path="/" component={Landing}></Route>
         <Switch>
-          <PrivateRoute exact path="/frommetoyou" component={Homepage}></PrivateRoute>
+          <PrivateRoute path="/frommetoyou" component={Homepage}></PrivateRoute>
         </Switch>
       </Router>
     </Auth>

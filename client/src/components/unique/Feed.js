@@ -47,9 +47,7 @@ export default function Feed({ className }) {
 
   // this is going to be used everytime a post has been created
   useEffect(async () => {
-    if (!feedIsShowing) {
-      setFeedIsShowing(false);
-    } else {
+    if (workSpaces.home) {
       setFeedIsShowing(true);
     }
 
@@ -82,19 +80,11 @@ export default function Feed({ className }) {
             <PostPlaceHolder></PostPlaceHolder>
             {/* This basically shows the posts no matter what, but if it's not updated, SOo in this case the useEffect is fine?*/}
 
-            {feedIsShowing
-              ? postFeed.map((index) => (
-                  <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>
-                ))
-              : <></>}
-
-            {/* {feedIsShowing
-              ? postFeed.map((index) => (
-                  <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>
-                ))
-              : postFeed.map((index) => (
-                  <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>
-                ))} */}
+            {feedIsShowing ? (
+              postFeed.map((index) => <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>)
+            ) : (
+              <></>
+            )}
           </Container>
         </div>
 

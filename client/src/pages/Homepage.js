@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 
 import gStyle from "../general.module.css";
@@ -17,6 +18,9 @@ import Setting from "../components/unique/Setting";
 import Search from "../components/unique/Search";
 import PeopleFinder from "../components/unique/PeopleFinder";
 
+//import Pages
+import UserProfile from "../pages/UserProfile";
+
 export default function Homepage() {
   // These are for the createPost Context
   const [creatingPost, setCreatingPost] = useState({ makingPost: false, finished: true });
@@ -34,7 +38,8 @@ export default function Homepage() {
     isSearchingSettings: false,
     peopleFinder: false,
     isSearchingPF: false,
-
+    userProfile: false,
+    isOnUP: false
   });
   const navbarIconValue = { workSpaces, setWorkSpaces };
 
@@ -50,6 +55,7 @@ export default function Homepage() {
             <div>{workSpaces.chat || workSpaces.isSearchingChat? <Chat></Chat> : <Chat className={gStyle.hide}></Chat>}</div>
             <div>{workSpaces.settings || workSpaces.isSearchingSettings? <Setting></Setting> : <Setting className={gStyle.hide}></Setting>}</div>
             <div>{workSpaces.peopleFinder || workSpaces.isSearchingPF? <PeopleFinder></PeopleFinder> : <PeopleFinder className={gStyle.hide}></PeopleFinder>}</div>
+            <Route path="/frommetoyou/:user" component={UserProfile}></Route>
           </div>
       </NavbarIconContext.Provider>
     </CreatePostContext.Provider>

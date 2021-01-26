@@ -73,7 +73,7 @@ Using the add method from earlier only works if the relationship sourceTable is 
 
           // Then create the User and the their Dup
           await db.Users.create({
-            username: req.body.username,
+            username: req.body.username.toLowerCase().trim(),
             pw: hash,
             EmailId: dataArr[0].id,
           }).then((data) => {
@@ -303,7 +303,6 @@ router.put("/suggestions", async (req, res) => {
       // adding the [] around the keys make them dynamic
       where: { [propChooser]: string.substring(stringBegin, stringEnd) },
     }).then((data) => {
-
       const dataSorted = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
 
       for (let i = 0; i < data.length; i++) {
@@ -401,6 +400,26 @@ router.put("/suggestions", async (req, res) => {
     default:
       return;
   }
+});
+
+router.put("/finishedSearch", async (req, res) => {
+  /* BODY
+    {
+      justSearched: "username",
+      jwt: user
+    }
+  */
+  const dataArr = [];
+  // Search the Users Table for those usernames, not emails and return all those users with that name
+  const allUsernames = await db.Users.findAll({ where: { username: req.body.justSearched.toLowerCase() } });
+
+  allUsernames.filter((index) => {
+    if (index.id !== req.body.jwt.id) {
+      return dataArr.push({ id: index.id, username: index.username, timeStamp: index.createdAt});
+    }
+  });
+
+  res.json(dataArr);
 });
 
 module.exports = router;
