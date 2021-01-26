@@ -1,35 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 
 // Import module Css
-import CSS from "./userProfile.module.css";
 import gStyle from "../general.module.css";
 
-// Import Contexts
-import NavbarIconContext from "../contexts/NavbarIconContext";
-import { AuthContext } from "../routes/auth";
-
-// Import FontAwesome Stuff
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-export default function UserProfile(props) {
-  const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
-  const { user } = useContext(AuthContext);
-
-  // useEffect(()=> {}, [])
-
-  console.log(workSpaces);
+// Import Unique Components
+import Timeline from "../components/unique/Timeline";
+/*
+SINCE THIS IS WRAPPED IN A ROUTE, ITSELF CAN'T JUST HAVE THE JSX AND JS INSIDE OF IT
+The original JSX and JS i wanted in here needed to be nested inside of another component and thus the Timeline Component was born
+*/
+export default function UserProfile() {
   return (
-    <div className={`${gStyle.flex} ${gStyle.flexCenter} ${gStyle.maxHeight} ${CSS.background}`}>
-      <div className={`${gStyle.topPaddingXL} ${gStyle.flexColumn} ${CSS.background}`}>
-        <FontAwesomeIcon icon={faUserCircle} className={`${CSS.profilePic} ${gStyle.alignCenterSelf}`}></FontAwesomeIcon>
-        <h1 className={`${gStyle.alignCenterSelf}`}>{workSpaces.currentSearch === undefined ? user.name : ""}</h1>
-
-        <div className={`${gStyle.flex} ${gStyle.flexCenter} ${CSS.postsAndFriends} ${CSS.background}`}>
-          <div className={`${gStyle.flexColumn} ${CSS.userFriends}`}> Friends</div>
-          <div className={`${gStyle.flexColumn} ${gStyle.flexGrow} ${CSS.userPosts}`}> Posts</div>
-        </div>
-      </div>
+    <div className={gStyle.positionStatic}>
+      <Timeline></Timeline>
     </div>
   );
 }

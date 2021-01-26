@@ -47,6 +47,7 @@ export default function Feed({ className }) {
 
   // this is going to be used everytime a post has been created
   useEffect(async () => {
+    console.log(creatingPost.finished)
     if (workSpaces.home) {
       setFeedIsShowing(true);
     }
@@ -68,6 +69,7 @@ export default function Feed({ className }) {
         setCreatingPost({ makingPost: false, finished: false });
       });
     }
+    console.log(postFeed);
   }, [creatingPost.finished, workSpaces.home]);
 
   return (

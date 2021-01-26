@@ -20,6 +20,7 @@ export const loginUser = (setUser, setErrors) => userData => {
   axios
     .post("/api/users/login", userData)
     .then(res => {
+      setErrors({});
       // Save to localStorage
       // console.log(res);
       // Set token to localStorage
@@ -39,9 +40,10 @@ export const loginUser = (setUser, setErrors) => userData => {
 };
 
 export const registerUser = setErrors => (userData, history) => {
-    console.log(userData)
   axios
-    .post("/api/users/register", userData)
+    .post("/api/users/register", userData).then(() => {
+      setErrors({})
+    })
     // .then(res => history.push("/"))
     .catch(err => {
       console.log(err);

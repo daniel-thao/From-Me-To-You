@@ -11,13 +11,13 @@
 }
 
 .userFriends {
-    width: 30%;
-    margin: 0em 2em 0em 0em;
+    width: 40%;
+    margin: 0em .5em 0em 0em;
     background:lightcoral;
 }
 
 .userPosts {
-    background: lightgoldenrodyellow;
+    /* background: lightgoldenrodyellow; */
 }
 
 .feedColumn {

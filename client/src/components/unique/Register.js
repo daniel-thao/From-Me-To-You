@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
 // test imports, we have to deconstruct it
 // import { registerUser } from "../routes/authentication/userAuth";
@@ -23,9 +23,11 @@ export default function Register() {
   const history = useHistory();
   useEffect(() => {
     if (user) {
-        history.push("/frommetoyou");
+      history.push("/frommetoyou");
     }
   }, [user, history]);
+
+  console.log(errors);
 
   return (
     <div className={`${CSS.flex} ${CSS.centeringForm}`}>
@@ -33,10 +35,12 @@ export default function Register() {
       <form
         className={`${CSS.registerForm}`}
         noValidate
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          registerUser(newUser);
-          setIsRegistered(true);
+          await registerUser(newUser);
+          if (!errors.username && !errors.email && !errors.password && !errors.confirmPwd) {
+            setIsRegistered(true);
+          }
         }}
       >
         <div className={`${CSS.flex} ${CSS.marginS}`}>
@@ -44,7 +48,7 @@ export default function Register() {
             className={CSS.inputs}
             onChange={(event) => setNewUser({ ...newUser, username: event.target.value })}
             value={newUser.name}
-            error={errors.name}
+            error={errors.username}
             id="name"
             type="text"
             // className={classnames("", {

@@ -81,7 +81,7 @@ Using the add method from earlier only works if the relationship sourceTable is 
           });
 
           await db.UsersDup.create({
-            username: req.body.username,
+            username: req.body.username.toLowerCase().trim(),
             pw: hash,
             EmailId: dataArr[0].id,
           }).then((data) => {
