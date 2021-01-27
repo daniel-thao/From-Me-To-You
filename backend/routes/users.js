@@ -402,6 +402,11 @@ router.put("/suggestions", async (req, res) => {
   }
 });
 
+/*
+==========================================================================================
+Find All users from just searching --> INCOMPLETE, need to be able to distinguish between who's already a friend and who's not
+==========================================================================================
+*/
 router.put("/finishedSearch", async (req, res) => {
   /* BODY
     {
@@ -411,13 +416,68 @@ router.put("/finishedSearch", async (req, res) => {
   */
   const dataArr = [];
   // Search the Users Table for those usernames, not emails and return all those users with that name
-  const allUsernames = await db.Users.findAll({ where: { username: req.body.justSearched.toLowerCase() } });
+  const allUsernames = await db.Users.findAll({
+    where: { username: req.body.justSearched.toLowerCase() },
+  });
 
   allUsernames.filter((index) => {
     if (index.id !== req.body.jwt.id) {
-      return dataArr.push({ id: index.id, username: index.username, timeStamp: index.createdAt});
+      return dataArr.push({ id: index.id, username: index.username, timeStamp: index.createdAt });
     }
   });
+
+  res.json(dataArr);
+});
+
+/*
+==========================================================================================
+Display all user's friends
+==========================================================================================
+*/
+router.put("/friends", async (req, res) => {
+  /* BODY
+    {
+      jwt: user
+    }
+  */
+  const dataArr = [];
+  // Search the FriendShip Table for user's id, not emails and return all those users with that name
+  const checkUserId = await db.UsersFriendships.findAll({ where: { UserId: req.body.jwt.id } });
+
+  // Also need to check the userDupId's because I've set it up as sender receiver, so someone can be a friend of another person but was orriginallly the receiver of that req
+  const checkUsersDupId = await db.UsersFriendships.findAll({
+    where: { UsersDupId: req.body.jwt.id },
+  });
+
+  function friend(data) {
+    const friendObj = {};
+    friendObj.username = data.username;
+    friendObj.id = data.id;
+    dataArr.push(friendObj);
+  }
+
+  // Choose only some of the data
+  for (let i = 0; i < checkUsersDupId.length; i++) {
+    await db.Users.findOne({ where: { id: checkUsersDupId[i].id } }).then((userData) => {
+      friend(userData);
+    });
+  }
+
+  // randomize the data just for the heck of it
+  const randomize = function (dataArr) {
+    let currentIndex = dataArr.length;
+
+    while (currentIndex !== 0) {
+      const randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      let temporaryValue = dataArr[currentIndex];
+      dataArr[currentIndex] = dataArr[randomIndex];
+      dataArr[randomIndex] = temporaryValue;
+    }
+  };
+
+  randomize(dataArr);
 
   res.json(dataArr);
 });

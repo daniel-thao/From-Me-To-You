@@ -10,12 +10,11 @@ const db = require("../models");
 const jwt = require("jsonwebtoken");
 const jwtDecode = require("jwt-decode");
 
-
 // This function will decode the token that the FE will send for the direct user, but not technically needed for the indirect user involved
 function deCoding(token) {
   const id = jwtDecode(token);
   return id.id;
-};
+}
 
 // This File will be mainly for the Friendship and FriendReq tables
 
@@ -102,15 +101,15 @@ router.put("/acceptFriendReq", async (req, res) => {
   // Assuming that I'm receiving the email Data of both users from the Front end, If that's the case, then I need to find the user id based off that
   /* BODY 
   {
-    sender: email int that was stored on the Front End
-    receiver: email int that was stored on the Front End
+    sender: id
+    receiver: jwt token
   }
   */
-  const user = await db.Users.findOne({ where: { EmailId: req.body.sender } });
+  const user = await db.Users.findOne({ where: { id: req.body.sender.id } });
   dataArr.push(user);
 
   // Also find the Receiever of the Friend Request and their Dup
-  const userDup = await db.UsersDup.findOne({ where: { EmailId: req.body.receiver } });
+  const userDup = await db.UsersDup.findOne({ where: { id: req.body.receiver.id } });
   dataArr.push(userDup);
 
   // Then I need to find the right request and the sender and update it based on where stuff
@@ -128,6 +127,35 @@ router.put("/acceptFriendReq", async (req, res) => {
 
   // Then delete the data in the FR Table
   await db.UsersFriendReq.destroy({ where: { accepted: true } }).then(async (data) => {
+    dataArr.push(data);
+  });
+
+  res.json(dataArr);
+});
+
+/*
+==========================================================================================
+Declining a Friend Request from someone else - when button is clicked on FE
+==========================================================================================
+*/
+router.put("/declineFriendReq", async (req, res) => {
+  const dataArr = [];
+  // Assuming that I'm receiving the email Data of both users from the Front end, If that's the case, then I need to find the user id based off that
+  /* BODY 
+  {
+    sender: id
+    receiver: jwt token
+  }
+  */
+  const user = await db.Users.findOne({ where: { id: req.body.sender.id } });
+  dataArr.push(user);
+
+  // Also find the Receiever of the Friend Request and their Dup
+  const userDup = await db.UsersDup.findOne({ where: { id: req.body.receiver.id } });
+  dataArr.push(userDup);
+
+  // No need to update the Friendship table, just delete the data in the FR Table
+  await db.UsersFriendReq.destroy({ where: { UserId: req.body.sender.id, UsersDupId: req.body.receiver.id } }).then(async (data) => {
     dataArr.push(data);
   });
 
@@ -158,24 +186,28 @@ router.put("/seeSentFriendReq", async (req, res) => {
 
 /*
 ==========================================================================================
-See your friend requests that you've received out - INCOMPLETE, NEED TO FINISH FE FIRST
+See your friend requests that you've received out
 ==========================================================================================
 */
 router.put("/seeReceivedFriendReq", async (req, res) => {
   // If the data I'm getting from the FE is email data, I need to find the user based on that
   /* BODY 
   {
-    email: email int that was stored on the Front End
+    jwt: current user's id
   }
   */
   const dataArr = [];
-  await db.Users.findOne({ where: { EmailId: req.body.email } }).then((data) => dataArr.push(data));
-  // Here we are going to go to the FR table based on the info that was sent from the FE
-  await db.UsersFriendReq.findAll({ where: { UserId: dataArr[0].id } }).then((data) => {
-    dataArr.push(data);
-  });
+  // await db.Users.findOne({ where: { EmailId: req.body.email } }).then((data) => dataArr.push(data));
 
-  res.json(dataArr[1]);
+  // Here we are going to go to the FR table based on the info that was sent from the FE
+  const receivedFR = await db.UsersFriendReq.findAll({ where: { UsersDupId: req.body.jwt.id } })
+
+  // Then we need to get the username of the Sender and bring it to the FE
+  for(let i = 0; i < receivedFR.length; i++) {
+    await db.Users.findOne({ where: { id: receivedFR[i].UserId } }).then((data) => dataArr.push({username: data.username, id: data.id}));
+  }
+
+  res.json(dataArr);
 });
 
 module.exports = router;

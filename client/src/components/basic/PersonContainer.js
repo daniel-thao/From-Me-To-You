@@ -16,9 +16,7 @@ export default function PersonContainer(props) {
   const { user } = useContext(AuthContext);
 
   const sendFriendReq = async (otherUserData) => {
-    console.log("putting the sendFriendReq here");
-    console.log(otherUserData);
-    console.log(user);
+    // console.log("putting the sendFriendReq here");
     await axios.post("/api/friends/makeFriendReq", {
       sender: user,
       receiver: otherUserData

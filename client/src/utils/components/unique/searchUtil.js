@@ -9,7 +9,7 @@ export const searched = async function (
   history,
   enterVal
 ) {
-  console.log(enterVal);
+  // console.log(enterVal);
   if (enterVal === "Enter") {
     await axios
       .post("/api/users/activateSearch", {
@@ -17,7 +17,7 @@ export const searched = async function (
         userInput: userTyping,
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         const recents = data.data[0].reverse();
         setURS(recents);
         // console.log(recents[0].searched);
@@ -46,7 +46,7 @@ export const searched = async function (
         userInput: enterVal,
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         const recents = data.data[0].reverse();
         setURS(recents);
@@ -54,7 +54,7 @@ export const searched = async function (
 
         if (enterVal) {
           history.push("/frommetoyou");
-          console.log("Second PART OF THE IF ");
+          // console.log("Second PART OF THE IF ");
           setWorkSpaces({
             ...workSpaces,
             currentSearch: recents[0].searched,
@@ -77,13 +77,13 @@ export const searched = async function (
         userInput: userTyping,
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         const recents = data.data[0].reverse();
         setURS(recents);
         // console.log(recents[0].searched);
 
-        console.log("Third PART OF THE IF ");
+        // console.log("Third PART OF THE IF ");
       });
   }
 };

@@ -24,11 +24,12 @@
 }
 
 .searchResults {
-  width: 18em;
+  width: 22.5em;
   /* height: calc(100vh / 1.485); */
   height: auto;
   background: rgb(36, 36, 36);
   cursor: pointer;
+  border-radius: .3em;
 }
 
 .searchBox {
@@ -38,7 +39,7 @@
   border-radius: 0.3em;
   /* border-top-right-radius: 0em;
   border-top-left-radius: 0em; */
-  width: 87%;
+  width: 89.4%;
   outline: none;
   border: none;
 }
@@ -46,23 +47,22 @@
 .chooseIcon {
   font-size: 2em;
   align-self: center;
-  margin: 0em 0em 0em .3em;
-  color:rgb(202, 202, 202);
+  margin: 0em 0em 0em 0.3em;
+  color: rgb(202, 202, 202);
 }
 
 .reuseIcon {
   font-size: 1.8em;
   align-self: center;
-  margin: 0em 0em 0em .3em;
-  color:rgb(202, 202, 202);
+  margin: 0em 0em 0em 0.3em;
+  color: rgb(202, 202, 202);
 }
 
 .searchText {
   font-size: 1.4em;
   align-self: center;
-  color:rgb(202, 202, 202);
-  margin: 0em 0em 0em .5em;
-
+  color: rgb(202, 202, 202);
+  margin: 0em 0em 0em 0.5em;
 }
 
 .recentSearches {
@@ -89,5 +89,86 @@
 
 .suggestions:hover {
   cursor: pointer;
+  background: rgb(78, 78, 78);
+}
+
+/* ================================================ Friend request stuff ================================================ */
+.friendRequestContainer {
+  position: absolute;
+  top: 0em;
+  right: 0em;
+}
+
+.reqResults {
+  width: 23.5em;
+  height: auto;
+  max-height: 40em;
+  background: rgb(36, 36, 36);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 0.3em;
+}
+
+.reqResults:hover {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.reqTitle {
+  font-size: 2em;
+  padding: 0.5em .6em;
+  /* background: rgb(78, 78, 78); */
+  width: 100%;
+  border-radius: 0.3em;
+  height: auto;
+  color: rgb(202, 202, 202);
+
+}
+
+.requestContainer {
+  /* background: lightcoral; */
+  border-radius: 0.3em;
+  width: 100%;
+  height: fit-content;
+  padding: 0.5em 1em;
+}
+
+.requestContainer:hover {
   background: rgb(61, 61, 61);
+}
+
+.userIcon {
+  font-size: 4em;
+  /* align-self: center; */
+  /* margin: 0em 0em 0em 0.3em; */
+  color: rgb(202, 202, 202);
+}
+
+.choiceContainer {
+  margin: 0em 1em;
+}
+
+.reqBtn {
+  background: rgb(160, 0, 75);
+  padding: 0.7em;
+  border-radius: 0.3em;
+  font-size: 1em;
+  width: 6em;
+  text-align: center;
+}
+
+.acceptBtn {
+  margin: 0em 0.7em 0em 0em;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+}
+
+.nameText {
+  font-size: 1.8em;
+  align-self: center;
+  color: rgb(202, 202, 202);
+  /* margin: 0em 0em 0em 0.5em; */
 }
