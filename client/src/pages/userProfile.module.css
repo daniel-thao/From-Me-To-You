@@ -32,6 +32,7 @@
   flex-wrap: wrap;
   padding: 0em 0em 1em 1em;
 }
+
 .eachFriend {
   margin: 1em 1em 0em 0em;
   padding: 0.5em 0em 0em 0em;
@@ -39,6 +40,21 @@
   width: calc(100vw / 13);
   height: 6.5em;
   border-radius: 0.7em;
+}
+
+.friendBtn {
+  background:rgb(160, 0, 75);
+  height: auto;
+}
+
+.unfriendBtn {
+  background:rgb(83, 0, 39);
+  height: auto;
+}
+
+.chatBtn {
+  background:rgb(160, 0, 75);
+  height: auto;
 }
 
 .eachFriend:hover {

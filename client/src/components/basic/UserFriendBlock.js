@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -9,10 +9,12 @@ import gStyle from "../../general.module.css";
 // Import FontAwesome Stuff
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NavbarIconContext from "../../contexts/NavbarIconContext";
+import OtherUserContext from "../../contexts/OtherUserContext";
 
 export default function UserFriendBlock(props) {
   const history = useHistory();
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
+  const { userFinder, setUserFinder } = useContext(OtherUserContext);
 
   return (
     <div>
@@ -22,8 +24,8 @@ export default function UserFriendBlock(props) {
         onClick={() => {
           setWorkSpaces({ ...workSpaces, currentSearch: props.mapIdx.username });
           history.push(`/frommetoyou/${props.mapIdx.username}`);
-
-          console.log("push to that user profile");
+          setUserFinder(props.mapIdx.id)
+          console.log(props.mapIdx);
         }}
       >
         <div className={`${CSS.flexColumn}`}>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 // Import FontAwesomeStuff
@@ -11,16 +11,20 @@ import gStyle from "../../general.module.css";
 
 // import Context
 import { AuthContext } from "../../routes/auth";
+import NavbarIconContext from "../../contexts/NavbarIconContext";
 
 export default function PersonContainer(props) {
   const { user } = useContext(AuthContext);
+  const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
 
   const sendFriendReq = async (otherUserData) => {
     // console.log("putting the sendFriendReq here");
-    await axios.post("/api/friends/makeFriendReq", {
-      sender: user,
-      receiver: otherUserData
-    }).then(data => console.log(data))
+    await axios
+      .post("/api/friends/makeFriendReq", {
+        sender: user,
+        receiver: otherUserData,
+      })
+      .then((data) => console.log(data));
   };
 
   return (
@@ -34,14 +38,53 @@ export default function PersonContainer(props) {
           <h6 className={`${FeedCSS.offWhite}`}>{props.mapIdx.username}</h6>
         </div>
         <div className={`${gStyle.flexGrow} ${gStyle.alignCenterSelf}`}></div>
-        <div
-          className={`${gStyle.alignCenterSelf} ${CSS.addFriendBtn}`}
-          onClick={() => {
-            sendFriendReq(props.mapIdx);
-          }}
-        >
-          Add Friend
-        </div>
+
+        {/* {test() ? <div>dsadadas</div> : <div>ewqewqewq</div>} */}
+        {props.alreadyFriends.includes(props.mapIdx.id) ? (
+          <div
+            className={`${gStyle.alignCenterSelf} ${CSS.addFriendBtn}`}
+            onClick={() => {
+              // sendFriendReq(props.mapIdx);
+              setWorkSpaces({
+                search: false,
+                home: false,
+                isSearchingHome: false,
+                chat: true,
+                isSearchingChat: true,
+                settings: false,
+                isSearchingSettings: false,
+                peopleFinder: false,
+                isSearchingPF: false,
+                userProfile: false,
+                isOnUP: false,
+              });
+            }}
+          >
+            Chat
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {props.sentReqAlready.includes(props.mapIdx.id) ? (
+          <div className={`${gStyle.alignCenterSelf} ${CSS.sentReqbtn}`}>Sent Request</div>
+        ) : (
+          <></>
+        )}
+
+        {!props.alreadyFriends.includes(props.mapIdx.id) &&
+        !props.sentReqAlready.includes(props.mapIdx.id) ? (
+          <div
+            className={`${gStyle.alignCenterSelf} ${CSS.addFriendBtn}`}
+            onClick={() => {
+              sendFriendReq(props.mapIdx);
+            }}
+          >
+            Add Friend
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <h6 className={`${FeedCSS.offWhite}`}>{props.mapIdx.post}</h6>
     </div>

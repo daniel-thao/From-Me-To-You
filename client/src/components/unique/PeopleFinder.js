@@ -13,27 +13,31 @@ import NavbarIconContext from "../../contexts/NavbarIconContext";
 import { AuthContext } from "../../routes/auth";
 
 // Import Font Awesome stuff
-import { faUserCircle} from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function PeopleFinder({ className }) {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
   const { user } = useContext(AuthContext);
 
-  const [peoples, setPeoples] = useState([])
+  const [peoples, setPeoples] = useState([]);
+  const [alreadyFriends, setAlreadyFriends] = useState([]);
+  const [sentReqAlready, setSentReqAlready] = useState([]);
 
   useEffect(() => {
     if (workSpaces.peopleFinder) {
-      console.log(workSpaces);
-      console.log("People Finder Page");
-
       axios
         .put("/api/users/finishedSearch", {
           justSearched: workSpaces.currentSearch,
           jwt: user,
         })
-        .then((data) => setPeoples(data.data));
+        .then((data) => {
+          setPeoples(data.data.allUsersArr);
+          setAlreadyFriends(data.data.alreadyFriendsArr);
+          setSentReqAlready(data.data.sentReqArr);
+        });
     }
   }, [workSpaces.peopleFinder]);
+
   // I think I should have the axios call here just like the feed
   return (
     <div
@@ -44,7 +48,12 @@ export default function PeopleFinder({ className }) {
       >
         {workSpaces.peopleFinder && peoples.length !== 0 ? (
           peoples.map((index) => (
-            <PersonContainer mapIdx={index} faIcon={faUserCircle}></PersonContainer>
+            <PersonContainer
+              mapIdx={index}
+              faIcon={faUserCircle}
+              alreadyFriends={alreadyFriends}
+              sentReqAlready={sentReqAlready}
+            ></PersonContainer>
           ))
         ) : (
           <></>

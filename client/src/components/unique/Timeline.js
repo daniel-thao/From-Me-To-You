@@ -7,6 +7,7 @@ import gStyle from "../../general.module.css";
 
 // Import Contexts
 import NavbarIconContext from "../../contexts/NavbarIconContext";
+import OtherUserContext from "../../contexts/OtherUserContext";
 import { AuthContext } from "../../routes/auth";
 
 // Import Basic Components
@@ -21,7 +22,8 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function UserProfile() {
-  const { workSpaces } = useContext(NavbarIconContext);
+  const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
+  const { userFinder, setUserFinder } = useContext(OtherUserContext);
 
   const { user } = useContext(AuthContext);
 
@@ -29,16 +31,22 @@ export default function UserProfile() {
   const [showUserData, setShowUserData] = useState(false);
 
   const [userFriends, setUserFriends] = useState([]);
+  let whichUser;
 
   useEffect(async () => {
     console.log(userFriends);
     if (workSpaces.isOnUP) {
       setShowUserData(true);
+      setWorkSpaces({ ...workSpaces, isOnUP: false });
     }
-    let whichUser;
-    if (workSpaces.currentSearch === undefined) {
+
+    if (workSpaces.currentSearch === undefined && userFinder === 0) {
       whichUser = user;
+    } else if (userFinder !== 0 && workSpaces.currentSearch !== "") {
+      whichUser = { id: userFinder, username: workSpaces.currentSearch };
+      setUserFinder(0);
     }
+    // Need a else that gets the info the person you just searched
 
     await axios.post("/api/users/genUserPost", { jwt: whichUser }).then(async (userPost) => {
       const arrBasedOnTimeCreated = userPost.data.sort(compare).reverse();
@@ -49,7 +57,6 @@ export default function UserProfile() {
           16
         );
       }
-
       setPostsByUser(arrBasedOnTimeCreated);
     });
 
@@ -58,11 +65,22 @@ export default function UserProfile() {
         jwt: whichUser,
       })
       .then((data) => {
-        console.log(data);
         setUserFriends(data.data);
+        console.log(data.data);
       });
+
+    // await axios
+    //   .put("/api/users/finishedSearch", {
+    //     justSearched: workSpaces.currentSearch,
+    //     jwt: user,
+    //   })
+    //   .then((data) => {
+    //     setPeoples(data.data.allUsersArr);
+    //     setAlreadyFriends(data.data.alreadyFriendsArr);
+    //     setSentReqAlready(data.data.sentReqArr);
+    //   });
     // console.log(postsByUser);
-  }, [workSpaces.isOnUP]);
+  }, [workSpaces.isOnUP, userFinder]);
 
   return (
     <div
@@ -82,6 +100,7 @@ export default function UserProfile() {
           className={`${gStyle.flex} ${gStyle.flexCenter} ${CSS.postsAndFriends} ${CSS.background}`}
         >
           <div className={`${gStyle.flexColumn} ${CSS.userFriends}`}>
+            <div>send</div>
             <div className={`${CSS.friendContainer}`}>
               {userFriends.length > 0 ? (
                 userFriends.map(function (index) {

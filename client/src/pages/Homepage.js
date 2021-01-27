@@ -9,6 +9,7 @@ import CSS from "./homepage.module.css";
 import CreatePostContext from "../contexts/CreatePostContext";
 import NavbarIconContext from "../contexts/NavbarIconContext";
 import { AuthContext } from "../routes/auth";
+import OtherUserContext from "../contexts/OtherUserContext";
 
 // import components
 import Navbar from "../components/unique/Navbar";
@@ -43,9 +44,14 @@ export default function Homepage() {
   });
   const navbarIconValue = { workSpaces, setWorkSpaces };
 
+  // These are for the OtherUser Context
+  const [userFinder, setUserFinder] = useState(0);
+  const otherUserValue = {userFinder, setUserFinder};
+
   return (
     <CreatePostContext.Provider value={postValue}>
       <NavbarIconContext.Provider value={navbarIconValue}>
+        <OtherUserContext.Provider value={otherUserValue}>
           <div className={gStyle.positionStatic}>
             <div className={creatingPost.makingPost ? CSS.enableCreatePost : CSS.nothing}></div>
             <Navbar></Navbar>
@@ -57,6 +63,7 @@ export default function Homepage() {
             <div>{workSpaces.peopleFinder || workSpaces.isSearchingPF? <PeopleFinder></PeopleFinder> : <PeopleFinder className={gStyle.hide}></PeopleFinder>}</div>
             <Route path="/frommetoyou/:user" component={UserProfile}></Route>
           </div>
+        </OtherUserContext.Provider>
       </NavbarIconContext.Provider>
     </CreatePostContext.Provider>
   );

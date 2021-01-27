@@ -210,4 +210,33 @@ router.put("/seeReceivedFriendReq", async (req, res) => {
   res.json(dataArr);
 });
 
+/*
+==========================================================================================
+Clicked on your friends via Timeline or Friends of friends via timeline or anywhere else not related to the search bar
+==========================================================================================
+*/
+router.put("/alreadyFriends", async (req, res) => {
+  /* BODY
+    { ---. Atleast their id
+      jwt: current user
+      person: {id, username}
+    }
+  */
+  const dataArr = [];
+
+  // go into the friendShip Table and find all instances of friendships between the current user and other user
+  const checkUserId = await db.UsersFriendships.findOne({where: {UserId: req.body.jwt.id, UsersDupId: req.body.person.id}})
+  const checkUserDupsId = await db.UsersFriendships.findOne({where: {UserId: req.body.person.id, UsersDupId: req.body.jwt.id}})
+
+  dataArr.push(checkUserId, checkUserDupsId);
+  // db.Users.findOne({ where: { id: req.body.person.id } }).then((data) => {
+  //   const friendObj = {};
+  //   friendObj.username = data.username;
+  //   friendObj.id = data.id;
+  //   dataArr.push(friendObj);
+  // });
+
+  res.json(dataArr);
+});
+
 module.exports = router;

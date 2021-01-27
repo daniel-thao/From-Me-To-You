@@ -185,7 +185,7 @@ router.post("/post", async (req, res) => {
 
 /*
 ==========================================================================================
-See the Post user just made --> Incomplete, Still need to se posts from other users
+See the Post user just made --> Incomplete, Still need to se posts from other users || Just make a new route that does that specifcally
 ==========================================================================================
 */
 router.post("/genUserPost", async (req, res) => {
@@ -414,7 +414,9 @@ router.put("/finishedSearch", async (req, res) => {
       jwt: user
     }
   */
-  const dataArr = [];
+  const allUsersArr = [];
+  const alreadyFriendsArr = [];
+  const sentReqArr = [];
   // Search the Users Table for those usernames, not emails and return all those users with that name
   const allUsernames = await db.Users.findAll({
     where: { username: req.body.justSearched.toLowerCase() },
@@ -422,11 +424,47 @@ router.put("/finishedSearch", async (req, res) => {
 
   allUsernames.filter((index) => {
     if (index.id !== req.body.jwt.id) {
-      return dataArr.push({ id: index.id, username: index.username, timeStamp: index.createdAt });
+      return allUsersArr.push({
+        id: index.id,
+        username: index.username,
+        timeStamp: index.createdAt,
+      });
     }
   });
 
-  res.json(dataArr);
+  // This is to see if they are already friends
+  for (let i = 0; i < allUsersArr.length; i++) {
+    const checkUserId = await db.UsersFriendships.findOne({
+      where: { UserId: req.body.jwt.id, UsersDupId: allUsersArr[i].id },
+    });
+    const checkUsersDupId = await db.UsersFriendships.findOne({
+      where: { UserId: allUsersArr[i].id, UsersDupId: req.body.jwt.id },
+    });
+
+    if (checkUserId !== null) {
+      alreadyFriendsArr.push(checkUserId.UsersDupId);
+    } else if (checkUsersDupId !== null) {
+      alreadyFriendsArr.push(checkUsersDupId.UserId);
+    }
+  }
+
+  // Then we need to see if we've sent a friend request to them already
+  for (let i = 0; i < allUsersArr.length; i++) {
+    const checkUserId = await db.UsersFriendReq.findOne({
+      where: { UserId: req.body.jwt.id, UsersDupId: allUsersArr[i].id },
+    });
+    const checkUsersDupId = await db.UsersFriendReq.findOne({
+      where: { UserId: allUsersArr[i].id, UsersDupId: req.body.jwt.id },
+    });
+
+    if (checkUserId !== null) {
+      sentReqArr.push(checkUserId.UsersDupId);
+    } else if (checkUsersDupId !== null) {
+      sentReqArr.push(checkUsersDupId.UserId);
+    }
+  }
+
+  res.json({ allUsersArr, alreadyFriendsArr, sentReqArr });
 });
 
 /*
@@ -449,17 +487,31 @@ router.put("/friends", async (req, res) => {
     where: { UsersDupId: req.body.jwt.id },
   });
 
-  function friend(data) {
+  function friend(dataFromUsers) {
     const friendObj = {};
-    friendObj.username = data.username;
-    friendObj.id = data.id;
+    friendObj.username = dataFromUsers.username;
+    friendObj.id = dataFromUsers.id;
     dataArr.push(friendObj);
+  }
+  // res.json({ arr1: checkUserId.length, arr2: checkUsersDupId.length });
+
+  // Choose only some of the data
+  for (let i = 0; i < checkUserId.length; i++) {
+    await db.Users.findOne({ where: { id: checkUserId[i].id } }).then((data) => {
+      if (data !== null) {
+        friend(data);
+      }
+    });
   }
 
   // Choose only some of the data
   for (let i = 0; i < checkUsersDupId.length; i++) {
-    await db.Users.findOne({ where: { id: checkUsersDupId[i].id } }).then((userData) => {
-      friend(userData);
+    await db.Users.findOne({ where: { id: checkUsersDupId[i].id } }).then((data) => {
+      // // res.json(data.id);
+      // console.log(data.id);
+      if (data !== null) {
+        friend(data);
+      }
     });
   }
 
@@ -477,9 +529,10 @@ router.put("/friends", async (req, res) => {
     }
   };
 
-  randomize(dataArr);
-
-  res.json(dataArr);
+  Promise.all(dataArr).then((data) => {
+    randomize(data);
+    res.json(data);
+  });
 });
 
 module.exports = router;

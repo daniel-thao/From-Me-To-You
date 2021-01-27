@@ -21,11 +21,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // Import Context
 import NavbarIconContext from "../../contexts/NavbarIconContext";
 import { AuthContext } from "../../routes/auth";
+import OtherUserContext from "../../contexts/OtherUserContext";
 
 // I need function that changes the icon of the search thing to an actual input bar
 
 export default function Navbar() {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
+  const {userFinder, setUserFinder} = useContext(OtherUserContext);
   const { user } = useContext(AuthContext);
 
   const history = useHistory();
@@ -95,6 +97,7 @@ export default function Navbar() {
           onClick={() => {
             setWorkSpaces({
               search: false,
+              currentSearch: undefined,
               home: false,
               isSearchingHome: false,
               chat: false,
@@ -106,6 +109,7 @@ export default function Navbar() {
               userProfile: false,
               isOnUP: true,
             });
+            setUserFinder(0);
             history.push(`/frommetoyou/${user.name}`);
           }}
         />
