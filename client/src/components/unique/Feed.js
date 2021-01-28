@@ -52,19 +52,21 @@ export default function Feed({ className }) {
     }
 
     if (creatingPost.finished === true) {
-      await axios.post("/api/users/genUserPost", { jwt: user }).then(async (userPost) => {
-        const arrBasedOnTimeCreated = userPost.data.sort(compare).reverse();
+      await axios.put("/api/users/genUserAndFriendsPosts", { jwt: user }).then(async (userPost) => {
+        // const arrBasedOnTimeCreated = userPost.data.sort(compare).reverse();
+        console.log(userPost);
+        const arr = userPost.data;
 
-        for (let i = 0; i < arrBasedOnTimeCreated.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
           // arrBasedOnTimeCreated[i].timeStamp.substring(11, 16)
           // console.log(arrBasedOnTimeCreated[i].timeStamp.substring(11, 16));
-          arrBasedOnTimeCreated[i].timeStampSmall = arrBasedOnTimeCreated[i].timeStamp.substring(
+          arr[i].timeStampSmall = arr[i].timeStamp.substring(
             11,
             16
           );
         }
 
-        setPostFeed(arrBasedOnTimeCreated);
+        setPostFeed(arr);
         setCreatingPost({ makingPost: false, finished: false });
       });
     }

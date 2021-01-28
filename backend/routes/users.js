@@ -203,14 +203,62 @@ router.post("/genUserPost", async (req, res) => {
 
   for (let i = 0; i < getAllUserIds[0].length; i++) {
     await db.Users.findOne({ where: { id: getAllUserIds[0][i] } }).then(async (data) => {
-      postArr[i].user = data.username;
+      postArr[i].username = data.username;
     });
   }
 
-  function compare (a, b) {
+  res.json(postArr);
+});
+
+/*
+==========================================================================================
+See Posts from Current user and their friends
+==========================================================================================
+*/
+router.put("/genUserAndFriendsPosts", async (req, res) => {
+  const getAllUserIds = [];
+  const allUsersPosts = [];
+
+  // using JWT token, find all their friends
+  const checkUserId = await db.UsersFriendships.findAll({ where: { UserId: req.body.jwt.id } });
+  const checkUsersDupId = await db.UsersFriendships.findAll({
+    where: { UsersDupId: req.body.jwt.id },
+  });
+
+  // Got to get the inverse otherwise you're just going to get the current user
+  checkUserId.map((index) => getAllUserIds.push(index.UsersDupId));
+  checkUsersDupId.map((index) => getAllUserIds.push(index.UserId));
+
+  // Once you find all the friends of the current user --> get their posts and username and store them
+  for (let i = 0; i < getAllUserIds.length; i++) {
+    const friendsPosts = await db.Posts.findAll({ where: { UserId: getAllUserIds[i] } });
+    const friendsUsernames = await db.Users.findOne({ where: { id: getAllUserIds[i] } });
+    if (friendsPosts.length !== 0) {
+      friendsPosts.map((index) =>
+        allUsersPosts.push({
+          timeStamp: index.createdAt,
+          post: index.content,
+          username: friendsUsernames.username,
+        })
+      );
+    }
+  }
+
+  // Now get the current users's posts and username and push it into the arr
+  const currentUserPosts = await db.Posts.findAll({ where: { UserId: req.body.jwt.id } });
+  const currentUser = await db.Users.findOne({ where: { id: req.body.jwt.id } });
+  currentUserPosts.map((index) =>
+    allUsersPosts.push({
+      timeStamp: index.createdAt,
+      post: index.content,
+      username: currentUser.username,
+    })
+  );
+
+  function compare(a, b) {
     const bandA = a.timeStamp;
     const bandB = b.timeStamp;
-  
+    
     let comparison = 0;
     if (bandA > bandB) {
       comparison = 1;
@@ -218,12 +266,12 @@ router.post("/genUserPost", async (req, res) => {
       comparison = -1;
     }
     return comparison;
-  };
+  }
   
-
+  const postsInOrder = allUsersPosts.sort(compare).reverse()
   // findUserArr.push(nameOfUsersArr);
 
-  res.json(postArr);
+  res.json(postsInOrder);
 });
 
 /*
@@ -517,8 +565,6 @@ router.put("/friends", async (req, res) => {
       }
     });
   }
-
-
 
   // Choose only some of the data
   for (let i = 0; i < checkUsersDupId.length; i++) {
