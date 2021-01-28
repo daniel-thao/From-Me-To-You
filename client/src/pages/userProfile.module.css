@@ -53,14 +53,14 @@
   border-radius: 0.7em;
   width: calc(100vw / 13);
   text-align: center;
-  background:rgb(160, 0, 75);
+  background: rgb(141, 0, 66);
   height: auto;
 }
 
 .friendBtn:hover {
   cursor: pointer;
-  background:rgb(83, 0, 39);
-  color: rgb(202,202,202);
+  background: rgb(83, 0, 39);
+  color: rgb(202, 202, 202);
 }
 
 .sentBtn {
@@ -69,7 +69,7 @@
   border-radius: 0.7em;
   width: calc(100vw / 13);
   text-align: center;
-  background:rgb(83, 0, 39);
+  background: rgb(83, 0, 39);
   height: auto;
 }
 /* 
@@ -79,7 +79,7 @@
   border-radius: 0.7em;
   width: calc(100vw / 13);
   text-align: center;
-  background:rgb(160, 0, 75);
+    background: rgb(141, 0, 66);
   height: auto;
 }
 
@@ -95,14 +95,14 @@
   border-radius: 0.7em;
   width: calc(100vw / 13);
   text-align: center;
-  background:rgb(160, 0, 75);
+  background: rgb(141, 0, 66);
   height: auto;
 }
 
 .chatBtn:hover {
   cursor: pointer;
-  background:rgb(83, 0, 39);
-  color: rgb(202,202,202);
+  background: rgb(83, 0, 39);
+  color: rgb(202, 202, 202);
 }
 
 .flexColumn {
@@ -114,7 +114,7 @@
 .friendPic {
   font-size: 4em;
   align-self: center;
-  /* background:rgb(160, 0, 75); */
+  /*   background: rgb(141, 0, 66); */
 }
 
 .friendName {

@@ -28,6 +28,9 @@ module.exports = (sequelize, DataTypes, models) => {
 
     Users.hasMany(models.Posts);
     Users.hasMany(models.RecentSearches);
+    Users.hasMany(models.Chat);
+    Users.hasMany(models.Messages);
+
 
   };
 

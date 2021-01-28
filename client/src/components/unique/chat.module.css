@@ -19,8 +19,9 @@
   height: calc(100vh / 1.15);
   width: calc(100vw / 4);
   min-width: 1em;
-  max-width: calc(15em);
+  max-width: calc(20em);
   border-right: groove rgb(161, 161, 161) 0.15em;
+  padding: 0em 1em 0em 0em;
   /* background: lightcoral; */
 }
 
@@ -57,4 +58,79 @@
 .typeBox:focus {
   border: none;
   outline: none;
+}
+
+.writeIcon {
+  font-size: 1.4em;
+  padding: .3em;
+  border-radius: .5em;
+  align-self:flex-end ;
+  background: rgb(141, 0, 66);
+  color: rgb(0, 0, 0);
+}
+
+.writeIcon:hover {
+  cursor: pointer;
+  background: rgb(180, 0, 84);
+}
+
+.flex {
+  display: flex;
+}
+
+.empty {
+  flex-grow: 2;
+}
+
+.chatSearchContainer {
+  background: rgb(75, 75, 75);
+  border-radius: .3em;
+  padding: .5em 1em;
+  display: flex;
+  flex-grow: 10;
+  border-radius: 1em;
+}
+.chatSIcon {
+  font-size: 1.5em;
+  align-self: center;
+}
+.chatSearch {
+  width: 100%;
+  padding: .5em;
+  border-radius: .5em;
+  background: transparent;
+  outline: none;
+  border: none;
+  align-self: center;
+}
+
+.chatSearch::placeholder {
+  color: black
+}
+
+.eachChat {
+  width: auto;
+  max-width: 100%;
+  /* background:rgb(141, 0, 66); */
+  padding: .5em;
+  display: flex;
+  border-radius: .3em;
+  transition: .2s;
+}
+.eachChat:hover {
+  cursor: pointer;
+  background: rgb(75, 75, 75);
+  transition: 0s;
+
+}
+
+.chatIcon {
+  font-size: 3em;
+  background:rgb(141, 0, 66);
+  border-radius: 2em;
+}
+
+.otherUserInfo {
+  align-self: center;
+  padding: 0em 0em 0em .3em;
 }
