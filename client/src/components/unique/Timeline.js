@@ -102,7 +102,8 @@ export default function UserProfile() {
               {/* I need functionality for this btn --> axios call */}
               {addOrUnfriend.length > 0 && workSpaces.currentSearch === undefined ? (
                 <></>
-              ) : addOrUnfriend[2] !== null || addOrUnfriend[3] !== null ? (
+              ) : (workSpaces.currentSearch !== undefined && addOrUnfriend[2] !== null) ||
+                (workSpaces.currentSearch !== undefined && addOrUnfriend[3] !== null) ? (
                 <div className={` ${CSS.sentBtn}`}>Sent Request</div>
               ) : addOrUnfriend[0] === null && addOrUnfriend[1] === null ? (
                 <div className={` ${CSS.friendBtn}`}>Add Friend</div>
