@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import axios from "axios";
 
@@ -17,7 +17,12 @@ import PostBlock from "../basic/PostBlock";
 import UserFriendBlock from "../basic/UserFriendBlock";
 
 // Import Func Utils
-import { genPosts, genFriends, genChoice, unfriend } from "../../utils/components/unique/timelineUtil";
+import {
+  genPosts,
+  genFriends,
+  genChoice,
+  unfriend,
+} from "../../utils/components/unique/timelineUtil";
 
 // Import FontAwesome Stuff
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
@@ -97,6 +102,8 @@ export default function UserProfile() {
               {/* I need functionality for this btn --> axios call */}
               {addOrUnfriend.length > 0 && workSpaces.currentSearch === undefined ? (
                 <></>
+              ) : addOrUnfriend[2] !== null || addOrUnfriend[3] !== null ? (
+                <div className={` ${CSS.sentBtn}`}>Sent Request</div>
               ) : addOrUnfriend[0] === null && addOrUnfriend[1] === null ? (
                 <div className={` ${CSS.friendBtn}`}>Add Friend</div>
               ) : (

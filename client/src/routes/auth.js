@@ -7,7 +7,7 @@ import setAuthToken from "../contexts/setAuthToken";
 // Create user context to get user in nested pages
 export const AuthContext = React.createContext("auth");
 
-export const logoutUser = setUser => {
+export const logoutUser = (setUser) => {
   // Remove token from local storage
   localStorage.removeItem("fromMeToYouJwtToken");
   // Remove auth header for future requests
@@ -16,10 +16,10 @@ export const logoutUser = setUser => {
   setUser(null);
 };
 
-export const loginUser = (setUser, setErrors) => userData => {
+export const loginUser = (setUser, setErrors) => (userData) => {
   axios
     .post("/api/users/login", userData)
-    .then(res => {
+    .then((res) => {
       setErrors({});
       // Save to localStorage
       // console.log(res);
@@ -33,20 +33,21 @@ export const loginUser = (setUser, setErrors) => userData => {
       // Set current user
       setUser(decoded);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       setErrors(err.response.data);
     });
 };
 
-export const registerUser = setErrors => (userData, history) => {
+export const registerUser = (setErrors) => (userData, history) => {
   axios
-    .post("/api/users/register", userData).then(() => {
-      setErrors({})
+    .post("/api/users/register", userData)
+    .then(() => {
+      setErrors({user: "succeed"});
     })
     // .then(res => history.push("/"))
-    .catch(err => {
-      console.log(err);
+    .catch((err) => {
+      console.log(err.response);
       setErrors(err.response.data);
     });
 };
@@ -80,7 +81,7 @@ export function useAuth() {
     errors,
     loginUser: loginUser(setUser, setErrors),
     logoutUser: () => logoutUser(setUser),
-    registerUser: registerUser(setErrors)
+    registerUser: registerUser(setErrors),
   };
 }
 
@@ -88,9 +89,7 @@ export function Auth({ children }) {
   const { user, errors, loginUser, logoutUser, registerUser } = useAuth();
 
   return (
-    <AuthContext.Provider
-      value={{ user, errors, loginUser, logoutUser, registerUser }}
-    >
+    <AuthContext.Provider value={{ user, errors, loginUser, logoutUser, registerUser }}>
       {children}
     </AuthContext.Provider>
   );

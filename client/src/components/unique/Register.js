@@ -25,9 +25,7 @@ export default function Register() {
     if (user) {
       history.push("/frommetoyou");
     }
-  }, [user, history]);
-
-  console.log(errors);
+  }, [user, history, isRegistered]);
 
   return (
     <div className={`${CSS.flex} ${CSS.centeringForm}`}>
@@ -38,7 +36,7 @@ export default function Register() {
         onSubmit={async (e) => {
           e.preventDefault();
           await registerUser(newUser);
-          if (!errors.username && !errors.email && !errors.password && !errors.confirmPwd) {
+          if (errors.user === "succeed") {
             setIsRegistered(true);
           }
         }}
