@@ -34,7 +34,7 @@ export default function SearchBlock(props) {
                 workSpaces,
                 setWorkSpaces,
                 history,
-                props.userTyping
+                props.mapIdx ? props.mapIdx.searched : props.userTyping
               );
             }
       }

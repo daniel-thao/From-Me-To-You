@@ -30,13 +30,12 @@ export const searched = async function (
         userInput: userTyping,
       })
       .then((data) => {
-        // console.log(data);
+        //
         const recents = data.data[0].reverse();
         setURS(recents);
-        // console.log(recents[0].searched);
+        //
         if (enterVal) {
           history.push("/frommetoyou");
-          // console.log("FIRST PART OF THE IF ")
           setWorkSpaces({
             ...workSpaces,
             currentSearch: recents[0].searched,
@@ -52,8 +51,8 @@ export const searched = async function (
           });
         }
       });
+    //
   } else if (typeof enterVal === "string") {
-    // console.log("daskldjasjdlas")
     setWorkSpaces({
       ...workSpaces,
       currentSearch: undefined,
@@ -67,21 +66,18 @@ export const searched = async function (
       chat: false,
       settings: false,
     });
+    //
     await axios
       .post("/api/users/activateSearch", {
         jwt: user,
-        userInput: userTyping,
+        userInput: enterVal,
       })
       .then((data) => {
-        // console.log(data);
-
         const recents = data.data[0].reverse();
         setURS(recents);
-        // console.log(recents[0].searched);
-
+        //
         if (enterVal) {
           history.push("/frommetoyou");
-          // console.log("Second PART OF THE IF ");
           setWorkSpaces({
             ...workSpaces,
             currentSearch: recents[0].searched,
@@ -97,6 +93,7 @@ export const searched = async function (
           });
         }
       });
+    //
   } else if (userTyping === "") {
     await axios
       .post("/api/users/activateSearch", {
@@ -104,13 +101,8 @@ export const searched = async function (
         userInput: userTyping,
       })
       .then((data) => {
-        // console.log(data);
-
         const recents = data.data[0].reverse();
         setURS(recents);
-        // console.log(recents[0].searched);
-
-        // console.log("Third PART OF THE IF ");
       });
   }
 };

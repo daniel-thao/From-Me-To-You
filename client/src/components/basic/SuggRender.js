@@ -20,13 +20,12 @@ export default function SuggRender(props) {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
   const { user } = useContext(AuthContext);
   const history = useHistory();
-  // console.log(props.mapIdx);
+
   return (
     <div
       key={props.mapIdx}
       className={`${searchCSS.recentSearches}`}
       onClick={() => {
-        console.log(props.mapIdx, props.userTyping);
         searched(
           user,
           props.mapIdx,
