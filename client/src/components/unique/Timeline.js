@@ -29,14 +29,16 @@ import { sendFriendReq } from "../../utils/components/basic/personUtil";
 // Import FontAwesome Stuff
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ChatBtnContext from "../../contexts/ChatBtnContext";
 
 export default function UserProfile() {
+  // Import Contexts
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
   const { userFinder, setUserFinder } = useContext(OtherUserContext);
-  const history = useHistory();
-
+  const { notChatTab, setNotChatTab } = useContext(ChatBtnContext);
   const { user } = useContext(AuthContext);
 
+  const history = useHistory();
   // Used to display the posts by the user
   const [postsByUser, setPostsByUser] = useState([]);
 
@@ -128,8 +130,32 @@ export default function UserProfile() {
               {/* I need functionality for this btn --> axios call */}
               {workSpaces.currentSearch === undefined ? (
                 <></>
+              ) : addOrUnfriend[0] !== null || addOrUnfriend[1] !== null ? (
+                <div
+                  className={` ${CSS.chatBtn}`}
+                  onClick={() => {
+                    setNotChatTab({id: otherUser.id, username: otherUser.username});
+                    // console.log(notChatTab, otherUser, user);
+                    history.push("/frommetoyou")
+                    setWorkSpaces({
+                      search: false,
+                      home: false,
+                      isSearchingHome: false,
+                      chat: true,
+                      isSearchingChat: true,
+                      settings: false,
+                      isSearchingSettings: false,
+                      peopleFinder: false,
+                      isSearchingPF: false,
+                      userProfile: false,
+                      isOnUP: false,
+                    });
+                  }}
+                >
+                  Chat
+                </div>
               ) : (
-                <div className={`${CSS.chatBtn}`}>chat</div>
+                <></>
               )}
             </div>
 

@@ -21,6 +21,7 @@ import PeopleFinder from "../components/unique/PeopleFinder";
 
 //import Pages
 import UserProfile from "../pages/UserProfile";
+import ChatBtnContext from "../contexts/ChatBtnContext";
 
 export default function Homepage() {
   const {user} = useContext(AuthContext);
@@ -50,21 +51,27 @@ export default function Homepage() {
   const [userFinder, setUserFinder] = useState(0);
   const otherUserValue = {userFinder, setUserFinder};
 
+  // These are the for the ChatBtn Context
+  const [notChatTab, setNotChatTab] = useState({id: 0, username: ""});
+  const chatBtnValue = {notChatTab, setNotChatTab};
+
   return (
     <CreatePostContext.Provider value={postValue}>
       <NavbarIconContext.Provider value={navbarIconValue}>
         <OtherUserContext.Provider value={otherUserValue}>
-          <div className={gStyle.positionStatic}>
-            <div className={creatingPost.makingPost ? CSS.enableCreatePost : CSS.nothing}></div>
-            <Navbar></Navbar>
-            <div>{workSpaces.search ? <Search></Search> : <Search className={gStyle.hide}></Search>}</div>
-            {/* <div>{workSpaces.home ? <Feed></Feed> : <Feed className={gStyle.hide}></Feed>}</div> */}
-            <div>{workSpaces.home || workSpaces.isSearchingHome ? <Feed></Feed> : <Feed className={gStyle.hide}></Feed>}</div>
-            <div>{workSpaces.chat || workSpaces.isSearchingChat? <Chat></Chat> : <Chat className={gStyle.hide}></Chat>}</div>
-            <div>{workSpaces.settings || workSpaces.isSearchingSettings? <Setting></Setting> : <Setting className={gStyle.hide}></Setting>}</div>
-            <div>{workSpaces.peopleFinder || workSpaces.isSearchingPF? <PeopleFinder></PeopleFinder> : <PeopleFinder className={gStyle.hide}></PeopleFinder>}</div>
-            <Route path="/frommetoyou/:user" component={UserProfile}></Route>
-          </div>
+          <ChatBtnContext.Provider value={chatBtnValue}>
+            <div className={gStyle.positionStatic}>
+              <div className={creatingPost.makingPost ? CSS.enableCreatePost : CSS.nothing}></div>
+              <Navbar></Navbar>
+              <div>{workSpaces.search ? <Search></Search> : <Search className={gStyle.hide}></Search>}</div>
+              {/* <div>{workSpaces.home ? <Feed></Feed> : <Feed className={gStyle.hide}></Feed>}</div> */}
+              <div>{workSpaces.home || workSpaces.isSearchingHome ? <Feed></Feed> : <Feed className={gStyle.hide}></Feed>}</div>
+              <div>{workSpaces.chat || workSpaces.isSearchingChat? <Chat></Chat> : <Chat className={gStyle.hide}></Chat>}</div>
+              <div>{workSpaces.settings || workSpaces.isSearchingSettings? <Setting></Setting> : <Setting className={gStyle.hide}></Setting>}</div>
+              <div>{workSpaces.peopleFinder || workSpaces.isSearchingPF? <PeopleFinder></PeopleFinder> : <PeopleFinder className={gStyle.hide}></PeopleFinder>}</div>
+              <Route path="/frommetoyou/:user" component={UserProfile}></Route>
+            </div>
+          </ChatBtnContext.Provider>
         </OtherUserContext.Provider>
       </NavbarIconContext.Provider>
     </CreatePostContext.Provider>

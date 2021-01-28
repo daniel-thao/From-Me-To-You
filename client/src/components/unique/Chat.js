@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 // Import CSS Modules
 import gStyle from "../../general.module.css";
@@ -7,12 +7,23 @@ import CSS from "./chat.module.css";
 // Import FontAwesome Stuff
 import { faPenAlt, faUserCircle, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ChatBtnContext from "../../contexts/ChatBtnContext";
 
 // I need function that changes the icon of the search thing to an actual input bar
 
 export default function Chat({ className }) {
   const [userTyping, setUserTyping] = useState("");
   const [searchChat, setSearchChat] = useState({ placeHolder: "Search Your Chat", userInput: "" });
+
+  const { notChatTab, setNotChatTab } = useContext(ChatBtnContext);
+
+  useEffect(() => {
+    if (notChatTab.username !== "" && notChatTab.id !== 0) {
+      setNotChatTab({id: 0, username: ""})
+      // IN Here I want to have an axios call that populates the chat portion and also the message box
+    }
+    console.log(notChatTab);
+  }, [notChatTab.username, notChatTab.id]);
   return (
     <div
       className={`${className} ${gStyle.flex} ${gStyle.flexRow} ${CSS.chatContainer} ${gStyle.maxHeight}`}

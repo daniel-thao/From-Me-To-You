@@ -16,10 +16,12 @@ import NavbarIconContext from "../../contexts/NavbarIconContext";
 
 // Import Func Util
 import { sendFriendReq } from "../../utils/components/basic/personUtil";
+import ChatBtnContext from "../../contexts/ChatBtnContext";
 
 export default function PersonContainer(props) {
   const { user } = useContext(AuthContext);
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
+  const { notChatTab, setNotChatTab } = useContext(ChatBtnContext);
 
   const history = useHistory();
 
@@ -75,7 +77,7 @@ export default function PersonContainer(props) {
           <div
             className={`${gStyle.alignCenterSelf} ${CSS.addFriendBtn}`}
             onClick={() => {
-              // sendFriendReq(props.mapIdx);
+              setNotChatTab({ id: props.mapIdx.id, username: props.mapIdx.username });
               setWorkSpaces({
                 search: false,
                 home: false,
