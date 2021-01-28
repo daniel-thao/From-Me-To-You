@@ -24,6 +24,8 @@ import {
   unfriend,
 } from "../../utils/components/unique/timelineUtil";
 
+import { sendFriendReq } from "../../utils/components/basic/personUtil";
+
 // Import FontAwesome Stuff
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,9 +46,13 @@ export default function UserProfile() {
   const [addOrUnfriend, setAddOrUnfriend] = useState([]);
   // used to make different axios calls to end the relationship
   const [otherUser, setOtherUser] = useState({});
+
+  const [userSentReq, setUserSentReq] = useState(false);
+
   let whichUser;
 
   useEffect(async () => {
+    setUserSentReq(false);
     if (workSpaces.isOnUP) {
       setWorkSpaces({ ...workSpaces, isOnUP: false });
       //
@@ -62,7 +68,7 @@ export default function UserProfile() {
       await genFriends(whichUser, setUserFriends);
       await genChoice(whichUser, user, setAddOrUnfriend);
     }
-  }, [workSpaces.isOnUP, userFinder]);
+  }, [workSpaces.isOnUP, userFinder, userSentReq]);
 
   return (
     <div
@@ -106,7 +112,15 @@ export default function UserProfile() {
                 (workSpaces.currentSearch !== undefined && addOrUnfriend[3] !== null) ? (
                 <div className={` ${CSS.sentBtn}`}>Sent Request</div>
               ) : addOrUnfriend[0] === null && addOrUnfriend[1] === null ? (
-                <div className={` ${CSS.friendBtn}`}>Add Friend</div>
+                <div
+                  className={` ${CSS.friendBtn}`}
+                  onClick={() => {
+                    sendFriendReq(otherUser, user);
+                    setUserSentReq(true);
+                  }}
+                >
+                  Add Friend
+                </div>
               ) : (
                 <></>
               )}

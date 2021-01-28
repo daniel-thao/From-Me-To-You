@@ -14,21 +14,24 @@ import gStyle from "../../general.module.css";
 import { AuthContext } from "../../routes/auth";
 import NavbarIconContext from "../../contexts/NavbarIconContext";
 
+// Import Func Util
+import { sendFriendReq } from "../../utils/components/basic/personUtil";
+
 export default function PersonContainer(props) {
   const { user } = useContext(AuthContext);
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
 
   const history = useHistory();
 
-  const sendFriendReq = async (otherUserData) => {
-    // console.log("putting the sendFriendReq here");
-    await axios
-      .post("/api/friends/makeFriendReq", {
-        sender: user,
-        receiver: otherUserData,
-      })
-      .then((data) => console.log(data));
-  };
+  // const sendFriendReq = async (otherUserData) => {
+  //   // console.log("putting the sendFriendReq here");
+  //   await axios
+  //     .post("/api/friends/makeFriendReq", {
+  //       sender: user,
+  //       receiver: otherUserData,
+  //     })
+  //     .then((data) => console.log(data));
+  // };
 
   return (
     <div key={props.mapIdx.timeStamp} className={`${FeedCSS.feedPost}`}>
@@ -55,7 +58,7 @@ export default function PersonContainer(props) {
                 home: false,
                 chat: false,
                 settings: false,
-                isOnUP: true
+                isOnUP: true,
               });
             }
 
@@ -105,8 +108,8 @@ export default function PersonContainer(props) {
           <div
             className={`${gStyle.alignCenterSelf} ${CSS.addFriendBtn}`}
             onClick={() => {
-              sendFriendReq(props.mapIdx);
-              props.setUserSentReq(true)
+              sendFriendReq(props.mapIdx, user);
+              props.setUserSentReq(true);
             }}
           >
             Add Friend
