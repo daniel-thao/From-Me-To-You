@@ -23,6 +23,8 @@ import PeopleFinder from "../components/unique/PeopleFinder";
 import UserProfile from "../pages/UserProfile";
 
 export default function Homepage() {
+  const {user} = useContext(AuthContext);
+
   // These are for the createPost Context
   const [creatingPost, setCreatingPost] = useState({ makingPost: false, finished: true });
   const postValue = { creatingPost, setCreatingPost };

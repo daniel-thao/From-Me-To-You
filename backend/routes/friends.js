@@ -155,7 +155,9 @@ router.put("/declineFriendReq", async (req, res) => {
   dataArr.push(userDup);
 
   // No need to update the Friendship table, just delete the data in the FR Table
-  await db.UsersFriendReq.destroy({ where: { UserId: req.body.sender.id, UsersDupId: req.body.receiver.id } }).then(async (data) => {
+  await db.UsersFriendReq.destroy({
+    where: { UserId: req.body.sender.id, UsersDupId: req.body.receiver.id },
+  }).then(async (data) => {
     dataArr.push(data);
   });
 
@@ -200,11 +202,13 @@ router.put("/seeReceivedFriendReq", async (req, res) => {
   // await db.Users.findOne({ where: { EmailId: req.body.email } }).then((data) => dataArr.push(data));
 
   // Here we are going to go to the FR table based on the info that was sent from the FE
-  const receivedFR = await db.UsersFriendReq.findAll({ where: { UsersDupId: req.body.jwt.id } })
+  const receivedFR = await db.UsersFriendReq.findAll({ where: { UsersDupId: req.body.jwt.id } });
 
   // Then we need to get the username of the Sender and bring it to the FE
-  for(let i = 0; i < receivedFR.length; i++) {
-    await db.Users.findOne({ where: { id: receivedFR[i].UserId } }).then((data) => dataArr.push({username: data.username, id: data.id}));
+  for (let i = 0; i < receivedFR.length; i++) {
+    await db.Users.findOne({ where: { id: receivedFR[i].UserId } }).then((data) =>
+      dataArr.push({ username: data.username, id: data.id })
+    );
   }
 
   res.json(dataArr);
@@ -223,19 +227,74 @@ router.put("/alreadyFriends", async (req, res) => {
     }
   */
   const dataArr = [];
+  console.log(req.body.person);
 
   // go into the friendShip Table and find all instances of friendships between the current user and other user
-  const checkUserId = await db.UsersFriendships.findOne({where: {UserId: req.body.jwt.id, UsersDupId: req.body.person.id}})
-  const checkUserDupsId = await db.UsersFriendships.findOne({where: {UserId: req.body.person.id, UsersDupId: req.body.jwt.id}})
+  const checkUserIdFriendship = await db.UsersFriendships.findOne({
+    where: { UserId: req.body.jwt.id, UsersDupId: req.body.person.id },
+  });
+  const checkUserDupsIdFriendShip = await db.UsersFriendships.findOne({
+    where: { UserId: req.body.person.id, UsersDupId: req.body.jwt.id },
+  });
 
-  dataArr.push(checkUserId, checkUserDupsId);
-  // db.Users.findOne({ where: { id: req.body.person.id } }).then((data) => {
-  //   const friendObj = {};
-  //   friendObj.username = data.username;
-  //   friendObj.id = data.id;
-  //   dataArr.push(friendObj);
-  // });
+  // go into the FR Table and find all instances of friendships between the current user and other user
+  const checkUserIdFR = await db.UsersFriendReq.findOne({
+    where: { UserId: req.body.jwt.id, UsersDupId: req.body.person.id },
+  });
+  const checkUserDupsIdFR = await db.UsersFriendReq.findOne({
+    where: { UserId: req.body.person.id, UsersDupId: req.body.jwt.id },
+  });
 
+  // Then push the data into the dataArr
+  dataArr.push(checkUserIdFriendship, checkUserDupsIdFriendShip, checkUserIdFR, checkUserDupsIdFR);
+
+  // Then essentially filter out which option is the right option for the
+  res.json(
+    dataArr.map((index) => {
+      if (index !== null) {
+        return index.createdAt;
+      } else {
+        return index;
+      }
+    })
+  );
+});
+
+/*
+==========================================================================================
+Unfriend Someone via btn in Timeline
+==========================================================================================
+*/
+router.delete("/unfriend", async (req, res) => {
+  /* BODY
+    { ---. Atleast their id
+      jwt: current user
+      person: {id, username}
+    }
+
+    ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
+  */
+  const dataArr = [];
+  console.log(req.query.jwt);
+  console.log(req.query.person);
+
+  const currentUser = JSON.parse(req.query.jwt);
+  const otherUser = JSON.parse(req.query.person);
+
+
+
+  // go into the friendShip Table and find all instances of friendships between the current user and other user
+  const checkUserIdFriendship = await db.UsersFriendships.destroy({
+    where: { UserId: currentUser.id, UsersDupId: otherUser.id },
+  });
+  const checkUserDupsIdFriendShip = await db.UsersFriendships.destroy({
+    where: { UserId: otherUser.id, UsersDupId: currentUser.id },
+  });
+
+  // Then push the data into the dataArr
+  dataArr.push(checkUserIdFriendship, checkUserDupsIdFriendShip);
+
+  // Then essentially filter out which option is the right option for the
   res.json(dataArr);
 });
 

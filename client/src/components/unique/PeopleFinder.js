@@ -10,6 +10,7 @@ import PersonContainer from "../basic/PersonContainer";
 
 // import Contexts
 import NavbarIconContext from "../../contexts/NavbarIconContext";
+import OtherUserContext from "../../contexts/OtherUserContext";
 import { AuthContext } from "../../routes/auth";
 
 // Import Font Awesome stuff
@@ -17,11 +18,14 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function PeopleFinder({ className }) {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
+  const {userFinder, setUserFinder} = useContext(OtherUserContext);
   const { user } = useContext(AuthContext);
 
   const [peoples, setPeoples] = useState([]);
   const [alreadyFriends, setAlreadyFriends] = useState([]);
   const [sentReqAlready, setSentReqAlready] = useState([]);
+  // This is used to trigger the useEffect and reload the page hopefully
+  const [userSentReq, setUserSentReq] = useState(false)
 
   useEffect(() => {
     if (workSpaces.peopleFinder) {
@@ -34,9 +38,10 @@ export default function PeopleFinder({ className }) {
           setPeoples(data.data.allUsersArr);
           setAlreadyFriends(data.data.alreadyFriendsArr);
           setSentReqAlready(data.data.sentReqArr);
+          setUserSentReq(false);
         });
     }
-  }, [workSpaces.peopleFinder]);
+  }, [workSpaces.peopleFinder, userSentReq]);
 
   // I think I should have the axios call here just like the feed
   return (
@@ -53,6 +58,8 @@ export default function PeopleFinder({ className }) {
               faIcon={faUserCircle}
               alreadyFriends={alreadyFriends}
               sentReqAlready={sentReqAlready}
+              setUserFinder={setUserFinder}
+              setUserSentReq={setUserSentReq}
             ></PersonContainer>
           ))
         ) : (

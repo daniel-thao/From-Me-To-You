@@ -42,24 +42,57 @@
   border-radius: 0.7em;
 }
 
-.friendBtn {
-  background:rgb(160, 0, 75);
-  height: auto;
-}
-
-.unfriendBtn {
-  background:rgb(83, 0, 39);
-  height: auto;
-}
-
-.chatBtn {
-  background:rgb(160, 0, 75);
-  height: auto;
-}
-
 .eachFriend:hover {
   cursor: pointer;
   background: rgb(95, 95, 95);
+}
+
+.friendBtn {
+  margin: 1.1em 0em 0em 0em;
+  padding: 1em 0em;
+  border-radius: 0.7em;
+  width: calc(100vw / 13);
+  text-align: center;
+  background:rgb(160, 0, 75);
+  height: auto;
+}
+
+.friendBtn:hover {
+  cursor: pointer;
+  background:rgb(83, 0, 39);
+  color: rgb(202,202,202);
+}
+/* 
+.unfriendBtn {
+  margin: 1.1em 0em 0em 0em;
+  padding: 1em 0em;
+  border-radius: 0.7em;
+  width: calc(100vw / 13);
+  text-align: center;
+  background:rgb(160, 0, 75);
+  height: auto;
+}
+
+.unfriendBtn:hover {
+  cursor: pointer;
+  background:rgb(83, 0, 39);
+  color: rgb(202,202,202);
+} */
+
+.chatBtn {
+  margin: 1.1em 0em 0em 1em;
+  padding: 1em 0em;
+  border-radius: 0.7em;
+  width: calc(100vw / 13);
+  text-align: center;
+  background:rgb(160, 0, 75);
+  height: auto;
+}
+
+.chatBtn:hover {
+  cursor: pointer;
+  background:rgb(83, 0, 39);
+  color: rgb(202,202,202);
 }
 
 .flexColumn {

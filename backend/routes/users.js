@@ -207,6 +207,20 @@ router.post("/genUserPost", async (req, res) => {
     });
   }
 
+  function compare (a, b) {
+    const bandA = a.timeStamp;
+    const bandB = b.timeStamp;
+  
+    let comparison = 0;
+    if (bandA > bandB) {
+      comparison = 1;
+    } else if (bandA < bandB) {
+      comparison = -1;
+    }
+    return comparison;
+  };
+  
+
   // findUserArr.push(nameOfUsersArr);
 
   res.json(postArr);
@@ -469,7 +483,7 @@ router.put("/finishedSearch", async (req, res) => {
 
 /*
 ==========================================================================================
-Display all user's friends
+Display all user's friends --> INCOMPLETE
 ==========================================================================================
 */
 router.put("/friends", async (req, res) => {
@@ -497,16 +511,18 @@ router.put("/friends", async (req, res) => {
 
   // Choose only some of the data
   for (let i = 0; i < checkUserId.length; i++) {
-    await db.Users.findOne({ where: { id: checkUserId[i].id } }).then((data) => {
+    await db.Users.findOne({ where: { id: checkUserId[i].UsersDupId } }).then((data) => {
       if (data !== null) {
         friend(data);
       }
     });
   }
 
+
+
   // Choose only some of the data
   for (let i = 0; i < checkUsersDupId.length; i++) {
-    await db.Users.findOne({ where: { id: checkUsersDupId[i].id } }).then((data) => {
+    await db.Users.findOne({ where: { id: checkUsersDupId[i].UserId } }).then((data) => {
       // // res.json(data.id);
       // console.log(data.id);
       if (data !== null) {

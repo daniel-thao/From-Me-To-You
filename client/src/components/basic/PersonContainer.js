@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 // Import FontAwesomeStuff
@@ -17,6 +18,8 @@ export default function PersonContainer(props) {
   const { user } = useContext(AuthContext);
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
 
+  const history = useHistory();
+
   const sendFriendReq = async (otherUserData) => {
     // console.log("putting the sendFriendReq here");
     await axios
@@ -34,7 +37,32 @@ export default function PersonContainer(props) {
           className={`${FeedCSS.userProfilePlaceholder}`}
           icon={props.faIcon}
         ></FontAwesomeIcon>
-        <div className={`${FeedCSS.userNameAndTime}`}>
+        <div
+          className={`${FeedCSS.userNameAndTime} ${CSS.nameHyperlink}`}
+          onClick={() => {
+            if (props.mapIdx.id === user.id) {
+              setWorkSpaces({ ...workSpaces, currentSearch: undefined, peopleFinder: false });
+            } else {
+              setWorkSpaces({
+                ...workSpaces,
+                currentSearch: props.mapIdx.username,
+                search: false,
+                peopleFinder: false,
+                isSearchingPF: false,
+                isSearchingChat: false,
+                isSearchingHome: false,
+                isSearchingSettings: false,
+                home: false,
+                chat: false,
+                settings: false,
+                isOnUP: true
+              });
+            }
+
+            props.setUserFinder(props.mapIdx.id);
+            history.push(`/frommetoyou/${props.mapIdx.username}`);
+          }}
+        >
           <h6 className={`${FeedCSS.offWhite}`}>{props.mapIdx.username}</h6>
         </div>
         <div className={`${gStyle.flexGrow} ${gStyle.alignCenterSelf}`}></div>
@@ -78,6 +106,7 @@ export default function PersonContainer(props) {
             className={`${gStyle.alignCenterSelf} ${CSS.addFriendBtn}`}
             onClick={() => {
               sendFriendReq(props.mapIdx);
+              props.setUserSentReq(true)
             }}
           >
             Add Friend

@@ -25,7 +25,6 @@ import {
   faAngleDoubleRight,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // I need function that changes the icon of the search thing to an actual input bar
 export default function Search({ className }) {

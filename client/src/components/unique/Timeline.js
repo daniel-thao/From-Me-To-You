@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import {useHistory} from "react-router-dom";
+
 import axios from "axios";
 
 // Import module Css
@@ -15,7 +17,7 @@ import PostBlock from "../basic/PostBlock";
 import UserFriendBlock from "../basic/UserFriendBlock";
 
 // Import Func Utils
-import { compare } from "../../utils/components/unique/feedUtil";
+import { genPosts, genFriends, genChoice, unfriend } from "../../utils/components/unique/timelineUtil";
 
 // Import FontAwesome Stuff
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
@@ -24,62 +26,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function UserProfile() {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
   const { userFinder, setUserFinder } = useContext(OtherUserContext);
+  const history = useHistory();
 
   const { user } = useContext(AuthContext);
 
+  // Used to display the posts by the user
   const [postsByUser, setPostsByUser] = useState([]);
-  const [showUserData, setShowUserData] = useState(false);
 
+  // used to identify the id of user
   const [userFriends, setUserFriends] = useState([]);
+  // Categorizes all other users into "add" or "unfriend"
+  const [addOrUnfriend, setAddOrUnfriend] = useState([]);
+  // used to make different axios calls to end the relationship
+  const [otherUser, setOtherUser] = useState({});
   let whichUser;
 
   useEffect(async () => {
-    console.log(userFriends);
     if (workSpaces.isOnUP) {
-      setShowUserData(true);
       setWorkSpaces({ ...workSpaces, isOnUP: false });
-    }
-
-    if (workSpaces.currentSearch === undefined && userFinder === 0) {
+      //
+    } else if (workSpaces.currentSearch === undefined) {
       whichUser = user;
-    } else if (userFinder !== 0 && workSpaces.currentSearch !== "") {
+      await genPosts(whichUser, setPostsByUser);
+      await genFriends(whichUser, setUserFriends);
+      //
+    } else if (workSpaces.currentSearch !== undefined) {
       whichUser = { id: userFinder, username: workSpaces.currentSearch };
-      setUserFinder(0);
+      setOtherUser(whichUser);
+      await genPosts(whichUser, setPostsByUser);
+      await genFriends(whichUser, setUserFriends);
+      await genChoice(whichUser, user, setAddOrUnfriend);
     }
-    // Need a else that gets the info the person you just searched
-
-    await axios.post("/api/users/genUserPost", { jwt: whichUser }).then(async (userPost) => {
-      const arrBasedOnTimeCreated = userPost.data.sort(compare).reverse();
-
-      for (let i = 0; i < arrBasedOnTimeCreated.length; i++) {
-        arrBasedOnTimeCreated[i].timeStampSmall = arrBasedOnTimeCreated[i].timeStamp.substring(
-          11,
-          16
-        );
-      }
-      setPostsByUser(arrBasedOnTimeCreated);
-    });
-
-    await axios
-      .put("/api/users/friends", {
-        jwt: whichUser,
-      })
-      .then((data) => {
-        setUserFriends(data.data);
-        console.log(data.data);
-      });
-
-    // await axios
-    //   .put("/api/users/finishedSearch", {
-    //     justSearched: workSpaces.currentSearch,
-    //     jwt: user,
-    //   })
-    //   .then((data) => {
-    //     setPeoples(data.data.allUsersArr);
-    //     setAlreadyFriends(data.data.alreadyFriendsArr);
-    //     setSentReqAlready(data.data.sentReqArr);
-    //   });
-    // console.log(postsByUser);
   }, [workSpaces.isOnUP, userFinder]);
 
   return (
@@ -100,7 +77,40 @@ export default function UserProfile() {
           className={`${gStyle.flex} ${gStyle.flexCenter} ${CSS.postsAndFriends} ${CSS.background}`}
         >
           <div className={`${gStyle.flexColumn} ${CSS.userFriends}`}>
-            <div>send</div>
+            <div className={`${CSS.friendContainer}`}>
+              {/* I need functionality for this btn --> axios call */}
+              {workSpaces.currentSearch === undefined ? (
+                <></>
+              ) : addOrUnfriend[0] !== null || addOrUnfriend[1] !== null ? (
+                <div
+                  className={` ${CSS.friendBtn}`}
+                  onClick={() => {
+                    unfriend(otherUser, user, history, workSpaces, setWorkSpaces, setUserFinder);
+                  }}
+                >
+                  Unfriend
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {/* I need functionality for this btn --> axios call */}
+              {addOrUnfriend.length > 0 && workSpaces.currentSearch === undefined ? (
+                <></>
+              ) : addOrUnfriend[0] === null && addOrUnfriend[1] === null ? (
+                <div className={` ${CSS.friendBtn}`}>Add Friend</div>
+              ) : (
+                <></>
+              )}
+
+              {/* I need functionality for this btn --> axios call */}
+              {workSpaces.currentSearch === undefined ? (
+                <></>
+              ) : (
+                <div className={`${CSS.chatBtn}`}>chat</div>
+              )}
+            </div>
+
             <div className={`${CSS.friendContainer}`}>
               {userFriends.length > 0 ? (
                 userFriends.map(function (index) {
@@ -113,8 +123,7 @@ export default function UserProfile() {
           </div>
 
           <div className={`${gStyle.flexColumn} ${gStyle.flexGrow} ${CSS.userPosts}`}>
-            {(showUserData && postsByUser.length > 0 && workSpaces.currentSearch === undefined) ||
-            workSpaces.currentSearch === "" ? (
+            {postsByUser.length > 0 ? (
               postsByUser.map((index) => (
                 <PostBlock mapIdx={index} faIcon={faUserCircle}></PostBlock>
               ))
