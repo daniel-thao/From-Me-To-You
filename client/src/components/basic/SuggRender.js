@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 // import CSS modules
@@ -15,8 +15,6 @@ import { AuthContext } from "../../routes/auth";
 import { faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-
-
 // I need functions that set the feed with the posts from other users
 export default function SuggRender(props) {
   const { workSpaces, setWorkSpaces } = useContext(NavbarIconContext);
@@ -28,26 +26,16 @@ export default function SuggRender(props) {
       key={props.mapIdx}
       className={`${searchCSS.recentSearches}`}
       onClick={() => {
-        console.log(props.mapIdx);
+        console.log(props.mapIdx, props.userTyping);
         searched(
           user,
-          props.userTyping,
+          props.mapIdx,
           props.setUserRecentSearches,
           workSpaces,
           setWorkSpaces,
           history,
           props.mapIdx
         );
-        setWorkSpaces({
-          ...workSpaces,
-          search: false,
-          currentSearch: props.mapIdx,
-          peopleFinder: true,
-          isSearchingChat: false,
-          isSearchingHome: false,
-          isSearchingSettings: false,
-          isSearchingPF: true,
-        });
       }}
     >
       <FontAwesomeIcon

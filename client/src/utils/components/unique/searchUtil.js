@@ -11,6 +11,19 @@ export const searched = async function (
 ) {
   // console.log(enterVal);
   if (enterVal === "Enter") {
+    setWorkSpaces({
+      ...workSpaces,
+      currentSearch: undefined,
+      search: false,
+      peopleFinder: false,
+      isSearchingPF: false,
+      isSearchingChat: false,
+      isSearchingHome: false,
+      isSearchingSettings: false,
+      home: false,
+      chat: false,
+      settings: false,
+    });
     await axios
       .post("/api/users/activateSearch", {
         jwt: user,
@@ -40,10 +53,24 @@ export const searched = async function (
         }
       });
   } else if (typeof enterVal === "string") {
+    // console.log("daskldjasjdlas")
+    setWorkSpaces({
+      ...workSpaces,
+      currentSearch: undefined,
+      search: false,
+      peopleFinder: false,
+      isSearchingPF: false,
+      isSearchingChat: false,
+      isSearchingHome: false,
+      isSearchingSettings: false,
+      home: false,
+      chat: false,
+      settings: false,
+    });
     await axios
       .post("/api/users/activateSearch", {
         jwt: user,
-        userInput: enterVal,
+        userInput: userTyping,
       })
       .then((data) => {
         // console.log(data);

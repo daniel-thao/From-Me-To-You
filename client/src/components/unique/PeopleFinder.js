@@ -29,6 +29,7 @@ export default function PeopleFinder({ className }) {
 
   useEffect(() => {
     if (workSpaces.peopleFinder) {
+      console.log(workSpaces);
       axios
         .put("/api/users/finishedSearch", {
           justSearched: workSpaces.currentSearch,
