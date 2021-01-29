@@ -14,7 +14,7 @@ export default function PostPlaceHolder() {
 
   return (
     <div
-      className={`${gStyle.topMarginXL} ${CSS.clickToPost} ${post.postColor}`}
+      className={`${gStyle.topMarginXL} ${CSS.clickToPost}`}
       onClick={() => {
         setCreatingPost({ makingPost: true, finished: false });
         setPost({ ...post, isEmpty: true });

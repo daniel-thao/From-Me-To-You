@@ -23,8 +23,8 @@
 .feedPost {
   margin: 1em;
   padding: 1em;
-  border-radius: .3em;
-  background:rgb(48, 48, 48);
+  border-radius: 0.3em;
+  background: rgb(68, 68, 68);
 }
 
 .userData {
@@ -36,7 +36,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  margin: 0em 0em 0em .5em;
+  margin: 0em 0em 0em 0.5em;
 }
 
 .userProfilePlaceholder {
@@ -46,20 +46,26 @@
 }
 
 .offWhite {
-  color:rgb(221, 221, 221);
+  color: rgb(221, 221, 221);
 }
 
 .clickToPost {
-  background: rgb(48, 48, 48);
+  background: rgb(68, 68, 68);
   border-radius: 2em;
   border: none;
   font-size: 1em;
   padding: 1em;
+  color:aliceblue;
+  /* width: 100%; */
+}
+
+.clickToPost::placeholder {
+  color: aliceblue;
   /* width: 100%; */
 }
 
 .clickToPost:hover {
-  background-color: rgb(70, 70, 70);
+  background-color: rgb(100, 100, 100);
   cursor: pointer;
   outline: transparent;
 }
@@ -111,21 +117,21 @@
 }
 
 .writingPost {
-    height: 70%;
-    width: 98.5%;
-    background: transparent;
-    color: aliceblue;
-    outline: none;
-    border: none;
+  height: 70%;
+  width: 98.5%;
+  background: transparent;
+  color: aliceblue;
+  outline: none;
+  border: none;
 }
 
 .post {
-    background: lightcoral;
-    width: 100%;
-    border-radius: 1em;
-    color: aliceblue;
+  background: lightcoral;
+  width: 100%;
+  border-radius: 1em;
+  color: aliceblue;
 }
 
 .post:hover {
-    cursor: pointer;
+  cursor: pointer;
 }

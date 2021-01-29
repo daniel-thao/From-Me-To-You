@@ -397,9 +397,12 @@ router.put("/messages", async (req, res) => {
   */
   const dataArr = [];
 
+  let chatMessages = [];
   // find all messages that include the chat Id
-  const chatMessages = await db.Messages.findAll({ where: { ChatId: req.body.chatInfo.chatId } });
-
+  if(req.body.chatInfo.chatId) {
+    chatMessages = await db.Messages.findAll({ where: { ChatId: req.body.chatInfo.chatId } });
+  }
+  
   if (chatMessages.length > 0) {
     chatMessages.map((index) =>
       dataArr.push({

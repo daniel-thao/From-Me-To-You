@@ -174,7 +174,7 @@ export default function Search({ className }) {
         </div>
       </div>
 
-      <div className={`${CSS.friendRequestContainer} ${gStyle.maxHeight}`}>
+      <div className={`${CSS.friendRequestContainer}`}>
         <div className={`${gStyle.topMarginL}`}>
           <div className={`${CSS.reqResults}`}>
             <SearchReq setUpdateFR={setUpdateFR}></SearchReq>

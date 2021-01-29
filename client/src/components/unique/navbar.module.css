@@ -8,7 +8,24 @@
 
 .icon {
     color: aliceblue;
+    padding: .22em .22em;
     font-size: 2em;
     vertical-align: middle;
+    cursor: pointer;
+    transition: .2s;
+    border-radius: 1em;
+}
+
+.icon:hover {
+    background-color:rgb(117, 117, 117);
+    /* color: black; */
+    transition: 0.1s
+}
+
+
+.icon:active {
+    background-color:black;
+    color: rgb(141, 0, 66);
+    transition: 0.1s
 }
 

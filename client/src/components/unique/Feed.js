@@ -32,7 +32,6 @@ export default function Feed({ className }) {
     placeholder: "What's On your Mind???",
     userInput: "",
     isEmpty: true,
-    postColor: CSS.postEmptyColor,
   });
 
   const editPostContextValues = { post, setPost };
