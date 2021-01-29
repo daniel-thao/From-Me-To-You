@@ -54,7 +54,7 @@ export default function Feed({ className }) {
     if (creatingPost.finished === true) {
       await axios.put("/api/users/genUserAndFriendsPosts", { jwt: user }).then(async (userPost) => {
         // const arrBasedOnTimeCreated = userPost.data.sort(compare).reverse();
-        console.log(userPost);
+        // console.log(userPost);
         const arr = userPost.data;
 
         for (let i = 0; i < arr.length; i++) {

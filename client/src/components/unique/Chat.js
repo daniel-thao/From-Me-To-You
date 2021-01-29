@@ -54,7 +54,7 @@ export default function Chat({ className }) {
 
   //
   useEffect(() => {
-    console.log(whichChat);
+    // console.log(whichChat);
     async function runThis() {
       if (notChatTab.username !== "" && notChatTab.id !== 0) {
         await axios
@@ -63,7 +63,7 @@ export default function Chat({ className }) {
             person: notChatTab,
           })
           .then((data) => {
-            console.log(data);
+            // console.log(data);
             setNotChatTab({ id: 0, username: "" });
           });
         // IN Here I want to have an axios call that populates the chat portion and also the message box
@@ -93,7 +93,7 @@ export default function Chat({ className }) {
   }, [notChatTab.username, notChatTab.id, workSpaces.chat, sendMsgNewChat]);
 
   useEffect(() => {
-    console.log(whichChat);
+    // console.log(whichChat);
 
     // call to check the messages
     async function runThis() {
@@ -322,7 +322,7 @@ export default function Chat({ className }) {
                       message: userTyping,
                     })
                     .then((data) => {
-                      console.log(data);
+                      // console.log(data);
                       setUserTyping("");
                       setNewChatFromBtn({});
                       setSendMsgNewChat(true);

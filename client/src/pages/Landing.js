@@ -16,7 +16,7 @@ export default function Landing() {
   // console.log(loginUser());
   // Set our object state
   useEffect(() => {
-    console.log(isRegistered);
+    // console.log(isRegistered);
   }, [isRegistered]);
   return (
       <HasAccountContext.Provider value={contextValue}>

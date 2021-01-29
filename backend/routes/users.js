@@ -304,7 +304,7 @@ router.post("/activateSearch", async (req, res) => {
     });
 
     // we also want to store up the suggestions Table as well
-    console.log(`\n\n${req.body.userInput.substring(0, 1)}\n\n`);
+    // console.log(`\n\n${req.body.userInput.substring(0, 1)}\n\n`);
     const noDbls = await db.Suggestions.findOne({
       where: {
         recommendation: req.body.userInput,
@@ -425,7 +425,7 @@ router.put("/suggestions", async (req, res) => {
     "fifteenLetters",
     "sixteenLetters",
   ];
-  console.log(`\n\n${req.body.userInput}\n\n`);
+  // console.log(`\n\n${req.body.userInput}\n\n`);
   switch (req.body.userInput.length) {
     case 1:
       return helper(req.body.userInput, propertyManager[0], 0, 1);

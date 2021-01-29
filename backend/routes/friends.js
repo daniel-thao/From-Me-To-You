@@ -23,19 +23,19 @@ function deCoding(token) {
 Get all the Data of Friendships and Friend Requests
 ==========================================================================================
 */
-router.get("/", async (req, res) => {
-  const dataArr = [];
+// router.get("/", async (req, res) => {
+//   const dataArr = [];
 
-  await db.UsersFriendships.findAll({}).then((data) => {
-    dataArr.push(data);
-  });
+//   await db.UsersFriendships.findAll({}).then((data) => {
+//     dataArr.push(data);
+//   });
 
-  await db.UsersFriendReq.findAll({}).then((data) => {
-    dataArr.push(data);
-  });
+//   await db.UsersFriendReq.findAll({}).then((data) => {
+//     dataArr.push(data);
+//   });
 
-  res.json(dataArr);
-});
+//   res.json(dataArr);
+// });
 
 /*
 ==========================================================================================
@@ -227,7 +227,7 @@ router.put("/alreadyFriends", async (req, res) => {
     }
   */
   const dataArr = [];
-  console.log(req.body.person);
+  // console.log(req.body.person);
 
   // go into the friendShip Table and find all instances of friendships between the current user and other user
   const checkUserIdFriendship = await db.UsersFriendships.findOne({
@@ -275,8 +275,8 @@ router.delete("/unfriend", async (req, res) => {
     ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
   */
   const dataArr = [];
-  console.log(req.query.jwt);
-  console.log(req.query.person);
+  // console.log(req.query.jwt);
+  // console.log(req.query.person);
 
   const currentUser = JSON.parse(req.query.jwt);
   const otherUser = JSON.parse(req.query.person);

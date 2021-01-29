@@ -34,7 +34,7 @@ export const loginUser = (setUser, setErrors) => (userData) => {
       setUser(decoded);
     })
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
       setErrors(err.response.data);
     });
 };
@@ -47,7 +47,7 @@ export const registerUser = (setErrors) => (userData, history) => {
     })
     // .then(res => history.push("/"))
     .catch((err) => {
-      console.log(err.response);
+      // console.log(err.response);
       setErrors(err.response.data);
     });
 };

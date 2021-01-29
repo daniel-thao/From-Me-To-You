@@ -17,29 +17,29 @@ export default function SearchReq(props) {
   const {workSpaces, setWorkSpaces} = useContext(NavbarIconContext);
 
   const addFriend = async (senderData) => {
-    console.log("adding friend");
-    console.log(senderData);
+    // console.log("adding friend");
+    // console.log(senderData);
     await axios
       .put("/api/friends/acceptFriendReq", {
         sender: senderData,
         receiver: user,
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setWorkSpaces({ ...workSpaces, search: false});
       });
   };
 
   const declineFriend = async (senderData) => {
-    console.log("declining friend");
-    console.log(senderData);
+    // console.log("declining friend");
+    // console.log(senderData);
     await axios
       .put("/api/friends/acceptFriendReq", {
         sender: senderData,
         receiver: user,
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setWorkSpaces({ ...workSpaces, search: false});
       });
   };

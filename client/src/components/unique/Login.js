@@ -20,7 +20,7 @@ export default function Login() {
   const history = useHistory();
   useEffect(() => {
     if (user) {
-      console.log(user);
+      // console.log(user);
         history.push("/frommetoyou");
     }
   }, [user, history]);
