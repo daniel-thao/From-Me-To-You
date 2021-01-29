@@ -281,8 +281,6 @@ router.delete("/unfriend", async (req, res) => {
   const currentUser = JSON.parse(req.query.jwt);
   const otherUser = JSON.parse(req.query.person);
 
-
-
   // go into the friendShip Table and find all instances of friendships between the current user and other user
   const checkUserIdFriendship = await db.UsersFriendships.destroy({
     where: { UserId: currentUser.id, UsersDupId: otherUser.id },
@@ -296,6 +294,166 @@ router.delete("/unfriend", async (req, res) => {
 
   // Then essentially filter out which option is the right option for the
   res.json(dataArr);
+});
+
+/*
+==========================================================================================
+Start Chat with Friend
+==========================================================================================
+*/
+router.post("/newChat", async (req, res) => {
+  /* BODY
+    { ---. Atleast their id
+      jwt: current user
+      person: {id, username}
+    }
+
+    ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
+  */
+  const dataArr = [];
+
+  const currentUser = req.body.jwt.id;
+  const otherUser = req.body.person.id;
+
+  // make the new chat, that will be used essentially as a boolean via the db
+  const newChat = await db.Chat.create({
+    UserId: currentUser,
+    UsersDupId: otherUser,
+    updatedAt: Date.now(),
+  });
+  res.json(newChat);
+});
+
+/*
+==========================================================================================
+Get all chats belonging to the current User
+==========================================================================================
+*/
+router.put("/chats", async (req, res) => {
+  /* BODY
+    {
+      jwt: current user
+    }
+
+    ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
+  */
+  const dataArr = [];
+
+  // find all instances where the current user has a chat with someone else
+  const checkUserId = await db.Chat.findAll({ where: { UserId: req.body.jwt.id } });
+  const checkUsersDupId = await db.Chat.findAll({ where: { UsersDupId: req.body.jwt.id } });
+
+  if (checkUserId.length !== 0) {
+    checkUserId.map((index) =>
+      dataArr.push({
+        chatId: index.id,
+        otherUserId: index.UsersDupId,
+        sortBy: index.sortByRecentness,
+      })
+    );
+  }
+
+  if (checkUsersDupId.length !== 0) {
+    checkUsersDupId.map((index) =>
+      dataArr.push({ chatId: index.id, otherUserId: index.UserId, sortBy: index.sortByRecentness })
+    );
+  }
+
+  // Now to find those users id's and usernames
+  for (let i = 0; i < dataArr.length; i++) {
+    const findOtherUser = await db.Users.findOne({ where: { id: dataArr[i].otherUserId } });
+    dataArr[i].otherUser = findOtherUser.username;
+  }
+
+  function compare(a, b) {
+    const bandA = a.sortBy;
+    const bandB = b.sortBy;
+
+    let comparison = 0;
+    if (bandA > bandB) {
+      comparison = 1;
+    } else if (bandA < bandB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
+  res.json(dataArr.sort(compare).reverse());
+});
+
+/*
+==========================================================================================
+Find All Messages of the chat chosen
+==========================================================================================
+*/
+router.put("/messages", async (req, res) => {
+  /* BODY
+    {
+      jwt: current user
+      chatInfo: {}
+    }
+
+    ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
+  */
+  const dataArr = [];
+
+  // find all messages that include the chat Id
+  const chatMessages = await db.Messages.findAll({ where: { ChatId: req.body.chatInfo.chatId } });
+
+  if (chatMessages.length > 0) {
+    chatMessages.map((index) =>
+      dataArr.push({
+        messages: index.content,
+        sortBy: index.createdAt,
+        sender: index.UserId,
+        receiver: index.UsersDupId
+      })
+    );
+  }
+
+  function compare(a, b) {
+    const bandA = a.sortBy;
+    const bandB = b.sortBy;
+
+    let comparison = 0;
+    if (bandA > bandB) {
+      comparison = 1;
+    } else if (bandA < bandB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
+  // Dont want to do the reverse here because the newest message will have a higher value since time goes forward
+  res.json(dataArr.sort(compare));
+});
+
+/*
+==========================================================================================
+Find All Messages of the chat chosen
+==========================================================================================
+*/
+router.post("/sendMessage", async (req, res) => {
+  /* BODY
+    {
+      jwt: current user
+      person: {},
+      message: String
+    }
+
+    ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
+  */
+  const dataArr = [];
+
+  // find all messages that include the chat Id
+  const newMessage = await db.Messages.create({
+    content: req.body.message,
+    ChatId: req.body.person.chatId,
+    UserId: req.body.jwt.id,
+    UsersDupId: req.body.person.otherUserId
+   });
+
+  res.json({message: "sent"})
 });
 
 module.exports = router;

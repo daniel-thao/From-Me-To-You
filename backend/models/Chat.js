@@ -1,8 +1,13 @@
 // "use strict";
+
+const timeElasped = Date.now();
+const today = new Date(timeElasped);
+// { updatedAt: { type: DataTypes.DATE, defaultValue: today.toISOString() } },
+
 module.exports = (sequelize, DataTypes) => {
   const Chat = sequelize.define(
     "Chat",
-    {},
+    { sortByRecentness: { type: DataTypes.BIGINT, defaultValue: timeElasped } },
     {
       freezeTableName: true,
     }
@@ -20,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
+    Chat.hasMany(models.Messages, {
+      onDelete: "cascade",
+    });
   };
+
   return Chat;
 };

@@ -22,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
+
+    Messages.belongsTo(models.Chat, {
+      foreignKey: {
+        allowNull: false,
+      },
+    });
   };
   return Messages;
 };
