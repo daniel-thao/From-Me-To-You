@@ -81,7 +81,7 @@ export default function UserProfile() {
           icon={faUserCircle}
           className={`${CSS.profilePic} ${gStyle.alignCenterSelf}`}
         ></FontAwesomeIcon>
-        <h1 className={`${gStyle.alignCenterSelf}`}>
+        <h1 className={`${gStyle.alignCenterSelf} ${CSS.profileName}`}>
           {workSpaces.currentSearch === undefined ? user.name : ""}
           {workSpaces.currentSearch ? workSpaces.currentSearch : ""}
         </h1>

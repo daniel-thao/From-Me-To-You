@@ -55,7 +55,14 @@
   font-size: 1.8em;
   align-self: center;
   margin: 0em 0em 0em 0.3em;
-  color: rgb(202, 202, 202);
+  color: rgb(141, 0, 66);
+}
+
+.reuseIcon2 {
+  font-size: 2em;
+  align-self: center;
+  margin: 0em 0em 0em 0.3em;
+  color: rgb(141, 0, 66);
 }
 
 .searchText {

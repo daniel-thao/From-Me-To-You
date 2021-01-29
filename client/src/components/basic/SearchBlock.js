@@ -39,7 +39,7 @@ export default function SearchBlock(props) {
             }
       }
     >
-      <FontAwesomeIcon className={`${SearchCSS.reuseIcon}`} icon={props.faIcon}></FontAwesomeIcon>
+      <FontAwesomeIcon className={`${props.mapIdx ? SearchCSS.reuseIcon : SearchCSS.reuseIcon2}`} icon={props.faIcon}></FontAwesomeIcon>
       {props.userTyping ? (
         <h5 className={`${SearchCSS.searchText}`}>{props.userTyping}</h5>
       ) : (

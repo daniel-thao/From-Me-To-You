@@ -45,55 +45,73 @@ export default function Chat({ className }) {
   const [newMsgNewChat, setNewMsgNewChat] = useState(false);
   // Tracks the input of the user of another user after choosing to make a new msg
   const [newMsgInput, setNewMsgInput] = useState("");
-
   // Need this to track all the friends of the current user
   const [allFriends, setAllFriends] = useState([]);
+  // used to track if the user is choosing to write a new msg with no chat
+  const [newChatFromBtn, setNewChatFromBtn] = useState({});
+  // Used to track if the user sent a new message and started a new chat
+  const [sendMsgNewChat, setSendMsgNewChat] = useState(false);
 
   //
-  useEffect(async () => {
-    if (notChatTab.username !== "" && notChatTab.id !== 0) {
-      await axios
-        .post("/api/friends/newChat", {
-          jwt: user,
-          person: notChatTab,
-        })
-        .then((data) => {
-          console.log(data);
-          setNotChatTab({ id: 0, username: "" });
+  useEffect(() => {
+    console.log(whichChat);
+    async function runThis() {
+      if (notChatTab.username !== "" && notChatTab.id !== 0) {
+        await axios
+          .post("/api/friends/newChat", {
+            jwt: user,
+            person: notChatTab,
+          })
+          .then((data) => {
+            console.log(data);
+            setNotChatTab({ id: 0, username: "" });
+          });
+        // IN Here I want to have an axios call that populates the chat portion and also the message box
+      }
+      if (workSpaces.chat) {
+        await axios.put("/api/friends/chats", { jwt: user }).then((data) => {
+          setNewChatFromBtn({});
+          setAllChats(data.data);
+          if (data.data.length > 0) {
+            setWhichChat(data.data[0]);
+          }
         });
-      // IN Here I want to have an axios call that populates the chat portion and also the message box
-    }
-    if (workSpaces.chat) {
-      await axios.put("/api/friends/chats", { jwt: user }).then((data) => {
-        setAllChats(data.data);
-        setWhichChat(data.data[0]);
-      });
 
-      // Axios call to find all the friends of the user
-      await axios
-        .put("/api/users/friends", {
-          jwt: user,
-        })
-        .then((data) => {
-          setAllFriends(data.data);
-        });
+        // Axios call to find all the friends of the user
+        await axios
+          .put("/api/friends/allFriendsForNewMsg", {
+            jwt: user,
+          })
+          .then((data) => {
+            if (data.data.length > 0) {
+              setAllFriends(data.data);
+            }
+          });
+      }
     }
-  }, [notChatTab.username, notChatTab.id, workSpaces.chat]);
+    runThis();
+  }, [notChatTab.username, notChatTab.id, workSpaces.chat, sendMsgNewChat]);
 
-  useEffect(async () => {
+  useEffect(() => {
+    console.log(whichChat);
+
     // call to check the messages
-    setSentMessage(false);
-    if (!sentMessage) {
-      await axios
-        .put("/api/friends/messages", {
-          jwt: user,
-          chatInfo: whichChat,
-        })
-        .then((data) => {
-          setMessagesPerChat(data.data);
-        });
+    async function runThis() {
+      if (!sentMessage) {
+        await axios
+          .put("/api/friends/messages", {
+            jwt: user,
+            chatInfo: whichChat,
+          })
+          .then((data) => {
+            setMessagesPerChat(data.data);
+            setSentMessage(false);
+            setSendMsgNewChat(false);
+          });
+      }
     }
-  }, [whichChat, sentMessage]);
+    runThis();
+  }, [whichChat, sentMessage, sendMsgNewChat]);
 
   return (
     <div
@@ -135,6 +153,9 @@ export default function Chat({ className }) {
                     className={`${CSS.eachChat}`}
                     onClick={() => {
                       setWhichChat(index);
+                      setNewChatFromBtn({});
+                      setNewMsgInput("");
+                      setNewMsgNewChat(false);
                     }}
                   >
                     <FontAwesomeIcon
@@ -150,6 +171,9 @@ export default function Chat({ className }) {
                     className={`${CSS.eachChat}`}
                     onClick={() => {
                       setWhichChat(index);
+                      setNewChatFromBtn({});
+                      setNewMsgInput("");
+                      setNewMsgNewChat(false);
                     }}
                   >
                     <FontAwesomeIcon
@@ -173,33 +197,74 @@ export default function Chat({ className }) {
           <div>
             {/* Right here is where i need to change it to match the new Message portion */}
             {newMsgNewChat ? (
-              <div>
+              <div className={`${CSS.msgAndChatContainer}`}>
                 <input
+                className={`${CSS.searchFriendToMsg}`}
                   onChange={(e) => {
                     setNewMsgInput(e.target.value);
                   }}
-                  placeholder={"Write the friend you would like to message"}
+                  placeholder={"Which Friend would you like to Message?"}
                   value={newMsgInput}
                 />
                 <FontAwesomeIcon
+                className={`${CSS.searchFriendtoMsgIcon}`}
                   icon={faWindowClose}
                   onClick={() => {
                     setNewMsgNewChat(false);
+                    setNewChatFromBtn({});
+                    setNewMsgInput("");
                   }}
                 ></FontAwesomeIcon>
               </div>
-            ) : whichChat.otherUser ? (
-              <h4 className={`${gStyle.white}`}>{whichChat.otherUser}</h4>
+            ) : newChatFromBtn.otherUserName ? (
+              <h4 className={`${gStyle.white}`}>{newChatFromBtn.otherUserName}</h4>
+            ) : whichChat.otherUser || whichChat.otherUserName ? (
+              <h4 className={`${gStyle.white}`}>{whichChat.otherUser}{whichChat.otherUserName}</h4>
             ) : (
               <h4 className={`${gStyle.white}`}>Who do you want to message?</h4>
             )}
-            {/* {whichChat.otherUser ? whichChat.otherUser : "Who do you want to message?"} */}
+            {newMsgInput !== "" ? (
+              <div className={CSS.friendFinderContainer}>
+                {allFriends.length === 0 ? (
+                  <></>
+                ) : (
+                  allFriends.map(function (index) {
+                    if (index.otherUserName.includes(newMsgInput.toLowerCase())) {
+                      return (
+                        <div
+                          className={CSS.friends}
+                          onClick={() => {
+                            if (index.chatId === undefined || index.chatId === null) {
+                              setNewChatFromBtn(index);
+                              setNewMsgInput("");
+                              setNewMsgNewChat(false);
+                            } else {
+                              setWhichChat(index);
+                              setNewMsgInput("");
+                              setNewMsgNewChat(false);
+                            }
+                          }}
+                        >
+                          <h5>{index.otherUserName}</h5>
+                        </div>
+                      );
+                    }
+                  })
+                )}
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
 
           <div className={CSS.chatExchange}>
             {newMsgNewChat ? (
               <></>
-            ) : messagesPerChat.length === 0 ? (
+            ) : newChatFromBtn.otherUserName ? (
+              <div className={`${CSS.noMsg}`}>
+                <h6>Send a Message to Start a Chat</h6>
+              </div>
+            ) : messagesPerChat.length === 0 && whichChat.otherUser ? (
               <div className={`${CSS.noMsg}`}>
                 <h6>No messages yet, Send Something to your friend!</h6>
               </div>
@@ -229,12 +294,16 @@ export default function Chat({ className }) {
               className={CSS.sendMsgIcon}
               icon={faPaperPlane}
               onClick={async () => {
-                // NEED ANOTHER IF OR ELSE IF HERE IN ORDER TO CHECK WHETHER THE newMsgNewChat === true and if it is and the newMsgInput === a name of a friend, 
+                // NEED ANOTHER IF OR ELSE IF HERE IN ORDER TO CHECK WHETHER THE newMsgNewChat === true and if it is and the newMsgInput === a name of a friend,
                 // If these two conditions are met and we send a message, we create a new chat and then create a new message that is joined to the chat and the user id
                 // the UsersDupid (sender and receiver id)
 
                 // But before we do the thing up above, we need to create a dropdown choice when the user is trying to search a friend to send this new message to
-                if (userTyping !== "") {
+
+                if (
+                  (userTyping !== "" && newChatFromBtn.otherUserName === undefined) ||
+                  newChatFromBtn.otherUserName === null
+                ) {
                   await axios
                     .post("/api/friends/sendMessage", {
                       jwt: user,
@@ -244,6 +313,19 @@ export default function Chat({ className }) {
                     .then((data) => {
                       setUserTyping("");
                       setSentMessage(true);
+                    });
+                } else if (userTyping !== "" && newChatFromBtn.otherUserName) {
+                  return axios
+                    .post("/api/friends/sendMessageAndStartNewChat", {
+                      jwt: user,
+                      person: newChatFromBtn,
+                      message: userTyping,
+                    })
+                    .then((data) => {
+                      console.log(data);
+                      setUserTyping("");
+                      setNewChatFromBtn({});
+                      setSendMsgNewChat(true);
                     });
                 }
               }}

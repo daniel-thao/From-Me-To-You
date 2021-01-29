@@ -69,6 +69,7 @@
   outline: none;
   border: none;
   align-self: center;
+  color:aliceblue;
 }
 
 .chatSearch::placeholder {
@@ -102,6 +103,66 @@
   padding: 0em 0em 0em 0.3em;
   color: aliceblue;
 }
+/* ============================  Friend Suggestions ====================================== */
+
+.msgAndChatContainer {
+  height: auto;
+  width: 70%;
+  display: flex;
+  /* background: rgb(48, 48, 48); */
+  border: solid .1em rgb(150, 150, 150);
+  padding: .3em;
+  border-radius: .5em;
+  margin: 0em 0em .2em 0em;
+}
+
+.searchFriendToMsg {
+  font-size: 1.3em;
+  background: transparent;
+  flex-grow: 30;
+  outline: none;
+  border: none;
+  border-radius: .3em;
+  color: aliceblue;
+}
+
+.searchFriendToMsg::placeholder {
+  color: aliceblue;
+}
+
+.searchFriendtoMsgIcon {
+  font-size: 2em;
+  /* align-self: center; */
+  color:rgb(141, 0, 66);
+  background-color: black;
+  border-radius: .15em;
+  padding: 0em .05em;
+  cursor: pointer;
+}
+
+.friendFinderContainer {
+  height: auto;
+  width: calc(100vw / 6);
+  min-width: 17em;
+  /* background: white; */
+  border-radius: 0.3em;
+  cursor: pointer;
+}
+
+.friends {
+  /* font-size: 2em; */
+  padding: 0.5em;
+  border-radius: 0.3em;
+  background: rgb(75, 75, 75);
+  outline: none;
+  color: aliceblue;
+}
+
+.friends:hover {
+  background: rgb(100, 100, 100);
+
+}
+
 /* ============================  Populating Messages ====================================== */
 
 .chatExchange {
@@ -114,20 +175,20 @@
 .msgUserBubble {
   color: aliceblue;
   background: rgb(141, 0, 66);
-  width:fit-content;
-  padding: .5em;
+  width: fit-content;
+  padding: 0.5em;
   border-radius: 1em;
-  margin: .1em 0em;
+  margin: 0.1em 0em;
   align-self: flex-end;
 }
 
 .msgOtherUserBubble {
   color: aliceblue;
   background: rgb(75, 75, 75);
-  width:fit-content;
-  padding: .5em;
+  width: fit-content;
+  padding: 0.5em;
   border-radius: 1em;
-  margin: .1em 0em;
+  margin: 0.1em 0em;
   align-self: flex-start;
 }
 

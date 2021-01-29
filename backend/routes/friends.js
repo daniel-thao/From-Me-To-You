@@ -406,7 +406,7 @@ router.put("/messages", async (req, res) => {
         messages: index.content,
         sortBy: index.createdAt,
         sender: index.UserId,
-        receiver: index.UsersDupId
+        receiver: index.UsersDupId,
       })
     );
   }
@@ -450,10 +450,116 @@ router.post("/sendMessage", async (req, res) => {
     content: req.body.message,
     ChatId: req.body.person.chatId,
     UserId: req.body.jwt.id,
-    UsersDupId: req.body.person.otherUserId
-   });
+    UsersDupId: req.body.person.otherUserId,
+  });
 
-  res.json({message: "sent"})
+  res.json({ message: "sent" });
 });
+
+/*
+==========================================================================================
+Find All Friends, even without chats and send that info to FE
+==========================================================================================
+*/
+router.put("/allFriendsForNewMsg", async (req, res) => {
+  /* BODY
+    {
+      jwt: current user
+    }
+  */
+  const dataArr = [];
+  const friendIdArr = [];
+
+  // FindAll friends of the Current User
+  const checkFriendTableUserId = await db.UsersFriendships.findAll({
+    where: { UserId: req.body.jwt.id },
+  });
+  const checkFriendTableUsersDupId = await db.UsersFriendships.findAll({
+    where: { UsersDupId: req.body.jwt.id },
+  });
+
+  // Then put them in the data Arr
+  if (checkFriendTableUserId.length > 0) {
+    checkFriendTableUserId.map((index) => friendIdArr.push({ otherUserId: index.UsersDupId }));
+  }
+
+  if (checkFriendTableUsersDupId.length > 0) {
+    checkFriendTableUsersDupId.map((index) => friendIdArr.push({ otherUserId: index.UserId }));
+  }
+
+  // Now that I have all the friends, I need to check the chats that are linked to the current user
+  const checkChatUserId = await db.Chat.findAll({ where: { UserId: req.body.jwt.id } });
+  const checkChatUsersDupId = await db.Chat.findAll({ where: { UsersDupId: req.body.jwt.id } });
+
+  if (checkChatUserId.length > 0) {
+    checkChatUserId.map((index) => {
+      for (let i = 0; i < friendIdArr.length; i++) {
+        if (index.UsersDupId === friendIdArr[i].otherUserId) {
+          friendIdArr[i].chatId = index.id;
+          friendIdArr[i].sortBy = index.sortByRecentness;
+        }
+      }
+    });
+  }
+
+  if (checkChatUsersDupId.length > 0) {
+    checkChatUsersDupId.map((index) => {
+      for (let i = 0; i < friendIdArr.length; i++) {
+        if (index.UserId === friendIdArr[i].otherUserId) {
+          friendIdArr[i].chatId = index.id;
+          friendIdArr[i].sortBy = index.sortByRecentness;
+        }
+      }
+    });
+  }
+
+  // Then get the name of the friends
+  for (let i = 0; i < friendIdArr.length; i++) {
+    const friendsName = await db.Users.findOne({ where: { id: friendIdArr[i].otherUserId } });
+    friendIdArr[i].otherUserName = friendsName.username;
+  }
+
+  res.json(friendIdArr);
+});
+
+/*
+==========================================================================================
+send a message that begins a new chat with a friend
+==========================================================================================
+*/
+router.post("/sendMessageAndStartNewChat", async (req, res) => {
+  /* BODY
+    {
+      jwt: current user
+      person: {},
+      message: String
+    }
+
+    ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
+  */
+  const dataArr = [];
+
+  // First create a new Chat
+  const newChat = await db.Chat.create({
+    sortByRecentness: Date.now(),
+    UserId: req.body.jwt.id,
+    UsersDupId: req.body.person.otherUserId
+  })
+
+  
+  // Then create that message
+  const newMessageForNewChat = await db.Messages.create({
+    content: req.body.message,
+    ChatId: newChat.id,
+    UserId: req.body.jwt.id,
+    UsersDupId: req.body.person.otherUserId
+  })
+
+
+  dataArr.push(newChat, newMessageForNewChat)
+  res.json(dataArr);
+
+});
+
 
 module.exports = router;

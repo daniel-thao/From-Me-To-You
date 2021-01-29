@@ -41,6 +41,8 @@
 
 .userProfilePlaceholder {
   font-size: 3em;
+  background: rgb(141, 0, 66);
+  border-radius: 2em;
 }
 
 .offWhite {
