@@ -298,34 +298,6 @@ router.delete("/unfriend", async (req, res) => {
 
 /*
 ==========================================================================================
-Start Chat with Friend
-==========================================================================================
-*/
-router.post("/newChat", async (req, res) => {
-  /* BODY
-    { ---. Atleast their id
-      jwt: current user
-      person: {id, username}
-    }
-
-    ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
-  */
-  const dataArr = [];
-
-  const currentUser = req.body.jwt.id;
-  const otherUser = req.body.person.id;
-
-  // make the new chat, that will be used essentially as a boolean via the db
-  const newChat = await db.Chat.create({
-    UserId: currentUser,
-    UsersDupId: otherUser,
-    updatedAt: Date.now(),
-  });
-  res.json(newChat);
-});
-
-/*
-==========================================================================================
 Get all chats belonging to the current User
 ==========================================================================================
 */
@@ -333,11 +305,13 @@ router.put("/chats", async (req, res) => {
   /* BODY
     {
       jwt: current user
+      checkAgainst: {}
     }
 
     ALSO IMPORTANT, as AXIOS, the DELETE info comes through the query property, not the body property
   */
   const dataArr = [];
+  let alreadyStartedChat = false;
 
   // find all instances where the current user has a chat with someone else
   const checkUserId = await db.Chat.findAll({ where: { UserId: req.body.jwt.id } });
@@ -378,6 +352,13 @@ router.put("/chats", async (req, res) => {
     return comparison;
   }
 
+  // console.log("\n\n" + req.body.checkAgainst.id + "\n\n");
+  // dataArr.map(index => {
+  //   if(index.otherUserid === req.body.checkAgainst.id) {
+  //     alreadyStartedChat = true;
+  //   }
+  // })
+
   res.json(dataArr.sort(compare).reverse());
 });
 
@@ -399,10 +380,10 @@ router.put("/messages", async (req, res) => {
 
   let chatMessages = [];
   // find all messages that include the chat Id
-  if(req.body.chatInfo.chatId) {
+  if (req.body.chatInfo.chatId) {
     chatMessages = await db.Messages.findAll({ where: { ChatId: req.body.chatInfo.chatId } });
   }
-  
+
   if (chatMessages.length > 0) {
     chatMessages.map((index) =>
       dataArr.push({
@@ -527,10 +508,10 @@ router.put("/allFriendsForNewMsg", async (req, res) => {
 
 /*
 ==========================================================================================
-send a message that begins a new chat with a friend
+Start a new Chat with a friend either you clicked chat with someone else
 ==========================================================================================
 */
-router.post("/sendMessageAndStartNewChat", async (req, res) => {
+router.post("/newChat", async (req, res) => {
   /* BODY
     {
       jwt: current user
@@ -546,23 +527,19 @@ router.post("/sendMessageAndStartNewChat", async (req, res) => {
   const newChat = await db.Chat.create({
     sortByRecentness: Date.now(),
     UserId: req.body.jwt.id,
-    UsersDupId: req.body.person.otherUserId
-  })
+    UsersDupId: req.body.person.otherUserId,
+  });
 
-  
   // Then create that message
   const newMessageForNewChat = await db.Messages.create({
     content: req.body.message,
     ChatId: newChat.id,
     UserId: req.body.jwt.id,
-    UsersDupId: req.body.person.otherUserId
-  })
+    UsersDupId: req.body.person.otherUserId,
+  });
 
-
-  dataArr.push(newChat, newMessageForNewChat)
+  dataArr.push(newChat, newMessageForNewChat);
   res.json(dataArr);
-
 });
-
 
 module.exports = router;
